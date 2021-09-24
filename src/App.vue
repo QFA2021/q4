@@ -1,18 +1,29 @@
 <template>
   <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-  <GameBoard/>
+  <GameBoard :state="state" />
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
-import GameBoard from './components/GameBoard.vue';
+import { Options, Vue } from "vue-class-component";
+import GameBoard from "./components/GameBoard.vue";
+import { exampleState, GameState } from "./GameState";
 
 @Options({
+  props: {
+    state: {
+      type: Object,
+      default() {
+        return exampleState;
+      },
+    },
+  },
   components: {
     GameBoard,
   },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  state!: GameState;
+}
 </script>
 
 <style>
