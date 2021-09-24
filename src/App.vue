@@ -1,17 +1,18 @@
 <template>
   <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-  <GameBoard />
+  <GameBoard/>
 </template>
 
-<script>
-import GameBoard from './components/GameBoard.vue'
+<script lang="ts">
+import { Options, Vue } from 'vue-class-component';
+import GameBoard from './components/GameBoard.vue';
 
-export default {
-  name: 'App',
+@Options({
   components: {
-    GameBoard
-  }
-}
+    GameBoard,
+  },
+})
+export default class App extends Vue {}
 </script>
 
 <style>

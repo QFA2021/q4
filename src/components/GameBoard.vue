@@ -2,7 +2,7 @@
   <table>
     <tr>
       <th v-for="column in state.width" :key="column">
-        <button>Place</button>
+        <button @click="place(column - 1)">Place</button>
       </th>
     </tr>
     <tr v-for="row in state.height" :key="row">
@@ -18,9 +18,11 @@
   </table>
 </template>
 
-<script>
-export default {
-  name: "GameBoard",
+<script lang="ts">
+import { Options, Vue } from "vue-class-component";
+import { GameState } from "../GameState";
+
+@Options({
   props: {
     state: {
       type: Object,
@@ -50,6 +52,22 @@ export default {
               },
             },
             {
+              2: {
+                5: {
+                  id: 2,
+                  player1: true,
+                  colorID: null,
+                },
+              },
+              4: {
+                5: {
+                  id: 1,
+                  player1: false,
+                  colorID: null,
+                },
+              },
+            },
+            {
               3: {
                 4: {
                   id: 2,
@@ -63,46 +81,66 @@ export default {
                 },
               },
             },
+            {
+              3: {
+                5: {
+                  id: 2,
+                  player1: true,
+                  colorID: null,
+                },
+              },
+              4: {
+                5: {
+                  id: 1,
+                  player1: false,
+                  colorID: null,
+                },
+              },
+            },
           ],
         };
       },
     },
   },
+})
+export default class GameBoard extends Vue {
+  state: GameState;
 
-  computed: {
-    occupation() {
-      // res 
-      const res = {};
-      for (const world of this.state.worlds) {
-        for (const column in world) {
-          if (!(column in res)) {
-            res[column] = {};
+  get occupation() {
+    // res is ids at each (column,row)
+    const res = {};
+    for (const world of this.state.worlds) {
+      for (const column in world) {
+        if (!(column in res)) {
+          res[column] = {};
+        }
+
+        for (const row in world[column]) {
+          if (!(row in res[column])) {
+            res[column][row] = new Set();
           }
 
-          for (const row in world[column]) {
-            if (!(row in res[column])) {
-              res[column][row] = {};
-            }
-
-            const cell = world[column][row];
-          }
+          const cell = world[column][row];
+          res[column][row].add(cell.id);
         }
       }
+    }
 
-      return res;
-    },
-  },
+    return res;
+  }
 
-  methods: {
-    occupationStyle(row, column) {
-      const data = this.occupation[column]?.[row];
+  occupationStyle(row: number, column: number) {
+    const data = this.occupation[column]?.[row];
 
-      return {
-        // "background-color": Math.random() < 0.5 ? "red" : "blue",
-      };
-    },
-  },
-};
+    return {
+      // "background-color": Math.random() < 0.5 ? "red" : "blue",
+    };
+  }
+
+  place(column: number) {
+    console.log(column);
+  }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -112,7 +150,8 @@ table {
   border-collapse: collapse;
   margin: 0 auto;
 }
-td,th {
+td,
+th {
   border: 1px solid black;
   width: 100px;
   height: 100px;
