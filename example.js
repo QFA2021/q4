@@ -1,5 +1,3 @@
-
-
 let state = {
     width: 6,
     height: 6,
@@ -37,4 +35,3 @@ let state = {
         },
     }]
 }
-
