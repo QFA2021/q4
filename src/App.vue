@@ -1,6 +1,8 @@
 <template>
-  <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-  <h1>Next player: {{ state.next_player ? "Red" : "Blue" }}</h1>
+  <h1>
+    <img src="./assets/Title.svg" height="50" width="144" alt="q4 Logo" />
+    <span>Next player: {{ state.next_player ? "Red" : "Blue" }}</span>
+  </h1>
   <GameBoard :state="state" @place="place" />
 </template>
 
@@ -40,5 +42,11 @@ export default class App extends Vue {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+h1 span {
+  top: -15px;
+  position: relative;
+  margin-left: 20px;
 }
 </style>
