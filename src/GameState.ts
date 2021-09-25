@@ -4,15 +4,15 @@ export interface GameState {
     next_player: boolean,
     next_stone_id: number,
     next_color_id: number,
-    worlds: World[],
+    worlds: World<Piece>[],
 }
 
-export interface World {
-    [index: number]: WorldRow
+export interface World<T> {
+    [index: number]: WorldRow<T>
 }
 
-export interface WorldRow {
-    [index: number]: Piece
+export interface WorldRow<T> {
+    [index: number]: T
 }
 
 export interface Piece {

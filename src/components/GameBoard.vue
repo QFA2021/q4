@@ -2,7 +2,7 @@
   <table>
     <tr>
       <th v-for="column in state.width" :key="column">
-        <button @click="place(column - 1)">Place</button>
+        <button @click="$emit('place', column - 1)">Place</button>
       </th>
     </tr>
     <tr v-for="row in state.height" :key="row">
@@ -20,19 +20,20 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { GameState } from "../GameState";
+import { GameState, World } from "../GameState";
 
 @Options({
   props: {
     state: Object,
   },
+  emits: ["place"],
 })
 export default class GameBoard extends Vue {
   state!: GameState;
 
   get occupation() {
     // res is ids at each (column,row)
-    const res = {};
+    const res: World<Set<number>> = {};
     for (const world of this.state.worlds) {
       for (const column in world) {
         if (!(column in res)) {
@@ -59,10 +60,6 @@ export default class GameBoard extends Vue {
     return {
       // "background-color": Math.random() < 0.5 ? "red" : "blue",
     };
-  }
-
-  place(column: number) {
-    console.log(column);
   }
 }
 </script>
