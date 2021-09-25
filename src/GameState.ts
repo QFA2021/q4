@@ -21,6 +21,15 @@ export interface Piece {
     colorID?: number
 }
 
+
+const p1: Piece = {
+    id: 1,
+    player1: true
+}
+const p2: Piece = {
+    id: 2,
+    player1: false
+}
 export const exampleState: GameState = {
     width: 6,
     height: 6,
@@ -31,56 +40,32 @@ export const exampleState: GameState = {
     worlds: [
         {
             2: {
-                5: {
-                    id: 2,
-                    player1: true,
-                },
+                5: p2
             },
             3: {
-                5: {
-                    id: 1,
-                    player1: false,
-                },
+                5: p1
             },
         },
         {
             2: {
-                5: {
-                    id: 2,
-                    player1: true,
-                },
+                5: p2
             },
             4: {
-                5: {
-                    id: 1,
-                    player1: false,
-                },
+                5: p1
             },
         },
         {
             3: {
-                4: {
-                    id: 2,
-                    player1: true,
-                },
-                5: {
-                    id: 1,
-                    player1: false,
-                },
+                4: p2,
+                5: p1
             },
         },
         {
             3: {
-                5: {
-                    id: 2,
-                    player1: true,
-                },
+                5: p2,
             },
             4: {
-                5: {
-                    id: 1,
-                    player1: false,
-                },
+                5: p1,
             },
         },
     ],

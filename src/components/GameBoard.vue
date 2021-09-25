@@ -10,11 +10,16 @@
         v-for="column in state.width"
         :key="column"
         :style="occupationStyle(row, column)"
-        :set="col = occupation[column - 1]?.[row - 1]"
+        :set="(col = occupation[column - 1]?.[row - 1])"
         :class="{ empty: col === undefined }"
       >
-        <span v-if="col?.size == 1">{{ col.values().next().value }}</span>
-        <pre v-else>{{ col }}</pre>
+        <span
+          v-for="cell in col"
+          :key="cell.id"
+          :class="{ small: true, player1: cell.player1 }"
+        >
+          {{ cell.id }}
+        </span>
       </td>
     </tr>
   </table>
@@ -22,7 +27,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { GameState, World } from "../GameState";
+import { GameState, World, Piece } from "../GameState";
 
 @Options({
   props: {
@@ -35,7 +40,7 @@ export default class GameBoard extends Vue {
 
   get occupation() {
     // res is ids at each (column,row)
-    const res: World<Set<number>> = {};
+    const res: World<Set<Piece>> = {};
     for (const world of this.state.worlds) {
       for (const column in world) {
         if (!(column in res)) {
@@ -47,8 +52,7 @@ export default class GameBoard extends Vue {
             res[column][row] = new Set();
           }
 
-          const cell = world[column][row];
-          res[column][row].add(cell.id);
+          res[column][row].add(world[column][row]);
         }
       }
     }
@@ -86,5 +90,22 @@ th {
 
 td.empty {
   background-color: rgb(100, 100, 100, 0.2);
+}
+
+td .small {
+  border: 8px solid blue;
+  border-radius: 100%;
+  box-sizing: border-box;
+
+  display: inline-block;
+  width: 45px;
+  height: 45px;
+  margin: 2px;
+
+  font-size: 25px;
+  font-weight: bold;
+}
+td .small.player1 {
+  border-color: red;
 }
 </style>
