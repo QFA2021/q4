@@ -22,7 +22,7 @@ import { insertClassicPiece, insertSpacePiece } from "./GameLogic";
     state: {
       type: Object,
       default() {
-        return reactive(emptyGame(7, 2));
+        return reactive(emptyGame(7, 6));
       },
     },
   },

@@ -2,14 +2,15 @@
   <table>
     <tr>
       <th v-for="column in state.width" :key="column">
-        <button @click="$emit('placeClassical', column - 1)">Classic</button>
+        <button @click="placeClassical(column)">Classic</button>
         <button
-          @click="prepare(column - 1)"
+          @click="prepare(column)"
           v-if="preparedColumn === undefined"
         >
           Quantum
         </button>
-        <button @click="placeSpace(column - 1)" v-else>Space</button>
+        <button @click="placeSpace(column)" v-else-if="preparedColumn != column">Space</button>
+        <button @click="preparedColumn = undefined" v-else>Reset</button>
       </th>
     </tr>
     <tr v-for="row in state.height" :key="row">
@@ -17,7 +18,7 @@
         v-for="column in state.width"
         :key="column"
         :style="occupationStyle(row, column)"
-        :set="(col = occupation[column - 1]?.[row - 1])"
+        :set="(col = occupation[column]?.[row])"
         :class="{ empty: col === undefined }"
       >
         <span
@@ -53,6 +54,10 @@ export default class GameBoard extends Vue {
 
   prepare(column: number) {
     this.preparedColumn = column;
+  }
+  placeClassical(column: number){
+    this.$emit("placeClassical", column);
+    this.preparedColumn = undefined;
   }
   placeSpace(column: number) {
     this.$emit("placeSpace", this.preparedColumn, column);

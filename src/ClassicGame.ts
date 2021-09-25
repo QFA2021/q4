@@ -6,7 +6,7 @@ import { World, WorldRow, Piece } from "./GameState";
  */
 export function insertPiece(height: number, world: World<Piece>, column: number, piece: Piece): boolean {
     if (column in world) {
-        let row = height - 1
+        let row = height
         while (row >= 0) {
             if (row in world[column]) {
                 row--
@@ -22,6 +22,6 @@ export function insertPiece(height: number, world: World<Piece>, column: number,
 
     // column is empty so far
     world[column] = {}
-    world[column][height - 1] = piece
+    world[column][height] = piece
     return true
 }
