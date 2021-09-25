@@ -11,6 +11,7 @@ import { Options, Vue } from "vue-class-component";
 import GameBoard from "./components/GameBoard.vue";
 import { exampleState, GameState } from "./GameState";
 import { reactive } from "vue";
+import { insertClassicPiece } from "./GameLogic";
 
 @Options({
   props: {
@@ -30,7 +31,7 @@ export default class App extends Vue {
 
   place(column: number) {
     console.log(column);
-    this.state.next_player = !this.state.next_player;
+    insertClassicPiece(this.state, column);
   }
 }
 </script>

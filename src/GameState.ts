@@ -34,7 +34,7 @@ export const exampleState: GameState = {
     width: 6,
     height: 6,
     next_player: true,
-    next_stone_id: 1,
+    next_stone_id: 3,
     next_color_id: 1,
 
     worlds: [
