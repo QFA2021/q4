@@ -23,7 +23,7 @@
         <span
           v-for="cell in col"
           :key="cell.id"
-          :class="{ small: true, player1: cell.player1 }"
+          :class="{ small: !cell.stable, player1: cell.player1 }"
         >
           {{ cell.id }}
         </span>
@@ -52,7 +52,6 @@ export default class GameBoard extends Vue {
   preparedColumn?: number;
 
   prepare(column: number) {
-    console.log(this.preparedColumn);
     this.preparedColumn = column;
   }
   placeSpace(column: number) {
@@ -61,8 +60,12 @@ export default class GameBoard extends Vue {
   }
 
   get occupation() {
-    // res is ids at each (column,row)
+    // for each cell collect the pieces that occur there
     const res: World<Set<Piece>> = {};
+
+    // detect if a piece occures at multiple positions accross worlds
+    const piecePos = new Map<Piece, { row: string; column: string }>();
+
     for (const world of this.state.worlds) {
       for (const column in world) {
         if (!(column in res)) {
@@ -74,7 +77,21 @@ export default class GameBoard extends Vue {
             res[column][row] = new Set();
           }
 
-          res[column][row].add(world[column][row]);
+          // piece has occured at (column, row)
+          const piece = world[column][row];
+          res[column][row].add(piece);
+
+          // check if piece occured at a different position
+          // TODO: this (view update) code mutates the (global) state
+          const pos = piecePos.get(piece);
+          if (pos === undefined) {
+            // piece has not been seen yet
+            piecePos.set(piece, { row: row, column: column });
+            piece.stable = true;
+          } else if (pos.row != row || pos.column != column) {
+            // piece detected at different position
+            piece.stable = false;
+          }
         }
       }
     }
@@ -114,20 +131,26 @@ td.empty {
   background-color: rgb(100, 100, 100, 0.2);
 }
 
-td .small {
-  border: 8px solid blue;
+td span {
+  border: 16px solid blue;
   border-radius: 100%;
   box-sizing: border-box;
 
   display: inline-block;
+  width: 90px;
+  height: 90px;
+
+  font-size: 51px;
+  font-weight: bold;
+}
+td span.small {
+  border-width: 8px;
   width: 45px;
   height: 45px;
   margin: 2px;
-
   font-size: 25px;
-  font-weight: bold;
 }
-td .small.player1 {
+td span.player1 {
   border-color: red;
 }
 </style>

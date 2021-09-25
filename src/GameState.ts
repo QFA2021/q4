@@ -18,17 +18,20 @@ export interface WorldRow<T> {
 export interface Piece {
     id: number,
     player1: boolean,
-    colorID?: number
+    colorID?: number,
+    stable: boolean
 }
 
 
 const p1: Piece = {
     id: 1,
-    player1: true
+    player1: true,
+    stable: false
 }
 const p2: Piece = {
     id: 2,
-    player1: false
+    player1: false,
+    stable: false
 }
 export const exampleState: GameState = {
     width: 6,

@@ -4,7 +4,8 @@ import { GameState, Piece, World } from "./GameState";
 function nextPiece(state: GameState): Piece {
     return {
         id: state.next_stone_id,
-        player1: state.next_player
+        player1: state.next_player,
+        stable: true
     }
 }
 
