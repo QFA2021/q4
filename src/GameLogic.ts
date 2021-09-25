@@ -25,7 +25,7 @@ export function insertSpacePiece(state: GameState, columns: number[]) {
     for (const world of state.worlds) {
         for (const column of columns) {
             // TODO: yes, this could be improved
-            const worldClone = JSON.parse(JSON.stringify(world));
+            const worldClone = cloneWorld(world);
             if (insertPiece(state.height, worldClone, column, piece)) {
                 newWorlds.push(worldClone)
             }
@@ -36,4 +36,16 @@ export function insertSpacePiece(state: GameState, columns: number[]) {
     state.worlds = newWorlds
     state.next_stone_id++
     state.next_player = !state.next_player
+}
+
+function cloneWorld<T>(world: World<T>): World<T> {
+    const newWorld = {} as World<T>;
+    for (const column in world) {
+        newWorld[column] = {};
+        for (const row in world[column]) {
+            newWorld[column][row] = world[column][row];
+        }
+    }
+
+    return newWorld
 }
