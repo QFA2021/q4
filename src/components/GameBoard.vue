@@ -2,7 +2,14 @@
   <table>
     <tr>
       <th v-for="column in state.width" :key="column">
-        <button @click="$emit('place', column - 1)">Place</button>
+        <button @click="$emit('placeClassical', column - 1)">Classic</button>
+        <button
+          @click="prepare(column - 1)"
+          v-if="preparedColumn === undefined"
+        >
+          Quantum
+        </button>
+        <button @click="placeSpace(column - 1)" v-else>Space</button>
       </th>
     </tr>
     <tr v-for="row in state.height" :key="row">
@@ -33,10 +40,25 @@ import { GameState, World, Piece } from "../GameState";
   props: {
     state: Object,
   },
-  emits: ["place"],
+  data() {
+    return {
+      preparedColumn: undefined,
+    };
+  },
+  emits: ["placeClassical", "placeSpace", "placeColor"],
 })
 export default class GameBoard extends Vue {
   state!: GameState;
+  preparedColumn?: number;
+
+  prepare(column: number) {
+    console.log(this.preparedColumn);
+    this.preparedColumn = column;
+  }
+  placeSpace(column: number) {
+    this.$emit("placeSpace", this.preparedColumn, column);
+    this.preparedColumn = undefined;
+  }
 
   get occupation() {
     // res is ids at each (column,row)

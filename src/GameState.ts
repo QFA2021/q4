@@ -70,3 +70,15 @@ export const exampleState: GameState = {
         },
     ],
 }
+
+export function emptyGame(width: number, height: number): GameState {
+    return {
+        width: width,
+        height: height,
+        next_player: Math.random() < .5,
+        next_stone_id: 1,
+        next_color_id: 1,
+
+        worlds: [{}]
+    }
+}

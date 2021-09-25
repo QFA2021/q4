@@ -3,22 +3,26 @@
     <img src="./assets/Title.svg" height="50" width="144" alt="q4 Logo" />
     <span>Next player: {{ state.next_player ? "Red" : "Blue" }}</span>
   </h1>
-  <GameBoard :state="state" @place="place" />
+  <GameBoard
+    :state="state"
+    @placeClassical="placeClassical"
+    @placeSpace="placeSpace"
+  />
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import GameBoard from "./components/GameBoard.vue";
-import { exampleState, GameState } from "./GameState";
+import { emptyGame, GameState } from "./GameState";
 import { reactive } from "vue";
-import { insertClassicPiece } from "./GameLogic";
+import { insertClassicPiece, insertSpacePiece } from "./GameLogic";
 
 @Options({
   props: {
     state: {
       type: Object,
       default() {
-        return reactive(exampleState);
+        return reactive(emptyGame(6, 7));
       },
     },
   },
@@ -29,9 +33,11 @@ import { insertClassicPiece } from "./GameLogic";
 export default class App extends Vue {
   state!: GameState;
 
-  place(column: number) {
-    console.log(column);
+  placeClassical(column: number) {
     insertClassicPiece(this.state, column);
+  }
+  placeSpace(...columns: number[]) {
+    insertSpacePiece(this.state, columns);
   }
 }
 </script>
