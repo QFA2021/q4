@@ -10,9 +10,11 @@
         v-for="column in state.width"
         :key="column"
         :style="occupationStyle(row, column)"
-        :class="{ empty: occupation[column - 1]?.[row - 1] === undefined }"
+        :set="col = occupation[column - 1]?.[row - 1]"
+        :class="{ empty: col === undefined }"
       >
-        <pre>{{ occupation[column - 1]?.[row - 1] }}</pre>
+        <span v-if="col?.size == 1">{{ col.values().next().value }}</span>
+        <pre v-else>{{ col }}</pre>
       </td>
     </tr>
   </table>
@@ -64,13 +66,13 @@ export default class GameBoard extends Vue {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 table {
   border: 1px solid black;
   border-collapse: collapse;
   margin: 0 auto;
 }
+
 td,
 th {
   border: 1px solid black;
@@ -80,5 +82,9 @@ th {
 
 th {
   height: 50px;
+}
+
+td.empty {
+  background-color: rgb(100, 100, 100, 0.2);
 }
 </style>
