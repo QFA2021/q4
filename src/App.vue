@@ -9,6 +9,7 @@
     @placeClassical="placeClassical"
     @placeSpace="placeSpace"
     @placeColor="placeColor"
+    @manualCollapse="manualCollapse"
   />
   <Alert
     title="Illegal move!"
@@ -24,6 +25,7 @@ import Alert from "./components/Alert.vue";
 import { emptyGame, GameState, Piece } from "./GameState";
 import { reactive } from "vue";
 import {
+  collapsePiece,
   insertClassicPiece,
   insertColorPiece,
   insertSecondColorPiece,
@@ -70,6 +72,10 @@ export default class App extends Vue {
   }
   placeSpace(...columns: number[]) {
     insertSpacePiece(this.state, columns);
+  }
+
+  manualCollapse(column: number, row: number, piece: Piece) {
+    collapsePiece(this.state, column, row, piece);
   }
 }
 </script>

@@ -25,58 +25,6 @@ export interface Piece {
     stable: boolean
 }
 
-
-const p1: Piece = {
-    id: 1,
-    player1: true,
-    stable: false
-}
-const p2: Piece = {
-    id: 2,
-    player1: false,
-    stable: false
-}
-export const exampleState: GameState = {
-    width: 6,
-    height: 6,
-    next_player: true,
-    next_stone_id: 3,
-    next_color_id: 1,
-
-    worlds: [
-        {
-            2: {
-                5: p2
-            },
-            3: {
-                5: p1
-            },
-        },
-        {
-            2: {
-                5: p2
-            },
-            4: {
-                5: p1
-            },
-        },
-        {
-            3: {
-                4: p2,
-                5: p1
-            },
-        },
-        {
-            3: {
-                5: p2,
-            },
-            4: {
-                5: p1,
-            },
-        },
-    ],
-}
-
 export function emptyGame(width: number, height: number): GameState {
     return {
         width: width,

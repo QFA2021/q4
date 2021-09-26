@@ -57,7 +57,7 @@ import { GameState, World, Piece } from "../GameState";
       preparedColumn: undefined,
     };
   },
-  emits: ["placeClassical", "placeSpace", "placeColor"],
+  emits: ["placeClassical", "placeSpace", "placeColor", "manualCollapse"],
 })
 export default class GameBoard extends Vue {
   state!: GameState;
@@ -84,7 +84,7 @@ export default class GameBoard extends Vue {
     // only keep worlds where piece is in (column, row)
     // ignore events, where the piece is already stable
     if (!piece.stable) {
-      collapsePiece(this.state, column, row, piece);
+      this.$emit("manualCollapse", column, row, piece);
     }
   }
 
