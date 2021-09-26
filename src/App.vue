@@ -71,7 +71,9 @@ export default class App extends Vue {
     }
   }
   placeSpace(...columns: number[]) {
-    insertSpacePiece(this.state, columns);
+    if (!insertSpacePiece(this.state, columns)) {
+      (this.$refs.modal as Alert).showModal = true;
+    }
   }
 
   manualCollapse(column: number, row: number, piece: Piece) {

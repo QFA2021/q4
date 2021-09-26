@@ -24,18 +24,19 @@ export function printgs(state: GameState) {
 export function insertClassicPiece(state: GameState, column: number): boolean {
     const piece = nextPiece(state)
 
+    // insert piece mutates the world iff it returns true
+    // thus any mutation implies newWorlds.length > 0
+    // ~> no need to copy the world
     const newWorlds = state.worlds.filter(world => insertPiece(state.height, world, column, piece))
-
-    if (newWorlds.length == 0) {
-        // no worlds remain
-        console.log("Illegal move!");
+    if (newWorlds.length === 0) {
         return false;
-    } else {
-        state.worlds = newWorlds;
-        state.next_stone_id++;
-        state.next_player = !state.next_player;
-        return true;
     }
+
+    // step game forward and accept move
+    state.worlds = newWorlds;
+    state.next_stone_id++;
+    state.next_player = !state.next_player;
+    return true;
 }
 
 export function insertColorPiece(state: GameState, column: number): Piece {
@@ -52,7 +53,6 @@ export function insertColorPiece(state: GameState, column: number): Piece {
 
 export function insertSecondColorPiece(state: GameState, column: number, piecePrimary: Piece) {
     // TODO: use the same id?
-    // TODO use deep copy function of stdlib?
     const piece: Piece = {
         id: piecePrimary.id,
         player1: piecePrimary.player1,
@@ -67,14 +67,14 @@ export function insertSecondColorPiece(state: GameState, column: number, piecePr
 }
 
 // insert piece: superposition in location
-export function insertSpacePiece(state: GameState, columns: number[]) {
+export function insertSpacePiece(state: GameState, columns: number[]): boolean {
     const piece = nextPiece(state)
 
-    // TODO: handle the case where no worlds remain
+    // try to insert new space-piece
     const newWorlds = [] as World<Piece>[]
     for (const world of state.worlds) {
+        // iterate over the insertion columns
         for (const column of columns) {
-            // TODO: yes, this could be improved
             const worldClone = cloneWorld(world);
             if (insertPiece(state.height, worldClone, column, piece)) {
                 newWorlds.push(worldClone)
@@ -82,10 +82,16 @@ export function insertSpacePiece(state: GameState, columns: number[]) {
         }
     }
 
-    // store new state
+    // reject if no world remains
+    if (newWorlds.length === 0) {
+        return false
+    }
+
+    // step game forward and accept move
     state.worlds = newWorlds
     state.next_stone_id++
     state.next_player = !state.next_player
+    return true
 }
 
 function cloneWorld<T>(world: World<T>): World<T> {
