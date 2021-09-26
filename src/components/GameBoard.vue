@@ -186,6 +186,9 @@ td div.color:before {
 
   animation: spin 4s linear infinite;
 }
+td div.color.small:before {
+  margin: -8px;
+}
 
 @keyframes spin {
   100% {
