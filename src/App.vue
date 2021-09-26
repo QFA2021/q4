@@ -1,7 +1,9 @@
 <template>
   <h1>
     <img src="./assets/Title.svg" height="50" width="144" alt="q4 Logo" />
-    <span>Next player: {{ state.next_player ? "Red" : "Blue" }}</span>
+    <span :class="{ player1: state.next_player }"
+      >Next player: {{ state.next_player ? "Red" : "Blue" }}</span
+    >
   </h1>
   <GameBoard
     :state="state"
@@ -83,6 +85,10 @@ export default class App extends Vue {
 </script>
 
 <style>
+body {
+  margin: 0;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -91,9 +97,29 @@ export default class App extends Vue {
   color: #2c3e50;
 }
 
+h1 {
+  position: sticky;
+  top: 0;
+
+  height: 50px;
+  margin: 10px 0;
+
+  background: white;
+  border-bottom: 1px solid black;
+}
+tr.controls {
+  position: sticky;
+  top: 51px;
+  background: white;
+}
+
 h1 span {
   top: -15px;
   position: relative;
   margin-left: 20px;
+  color: blue;
+}
+h1 span.player1 {
+  color: red;
 }
 </style>

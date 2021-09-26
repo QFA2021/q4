@@ -1,6 +1,6 @@
 <template>
   <table>
-    <tr>
+    <tr class="controls">
       <th v-for="column in state.width" :key="column">
         <button @click="placeColor(column)">Color</button>
         <template v-if="!colorPiece">
