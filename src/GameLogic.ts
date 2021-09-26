@@ -99,3 +99,13 @@ function cloneWorld<T>(world: World<T>): World<T> {
 
     return newWorld
 }
+
+
+/**
+ * Only keep worlds where piece is in (column, row)
+ */
+export function collapsePiece(state: GameState, column: number, row: number, piece: Piece) {
+    state.worlds = state.worlds.filter(world => {
+        return world[column]?.[row] === piece
+    });
+}

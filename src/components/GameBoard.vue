@@ -26,15 +26,16 @@
         :class="{ empty: col === undefined }"
       >
         <div
-          v-for="cell in col"
-          :key="cell.id"
+          v-for="piece in col"
+          :key="piece.id"
           :class="{
-            small: !cell.stable,
-            player1: cell.player1,
-            color: cell.colorID !== undefined,
+            small: !piece.stable,
+            player1: piece.player1,
+            color: piece.colorID !== undefined,
           }"
+          @click="collapse(column, row, piece)"
         >
-          {{ cell.id }}
+          {{ piece.id }}
         </div>
       </td>
     </tr>
@@ -42,6 +43,7 @@
 </template>
 
 <script lang="ts">
+import { collapsePiece } from "@/GameLogic";
 import { Options, Vue } from "vue-class-component";
 import { GameState, World, Piece } from "../GameState";
 
@@ -76,6 +78,14 @@ export default class GameBoard extends Vue {
   placeSpace(column: number) {
     this.$emit("placeSpace", this.preparedColumn, column);
     this.preparedColumn = undefined;
+  }
+
+  collapse(column: number, row: number, piece: Piece) {
+    // only keep worlds where piece is in (column, row)
+    // ignore events, where the piece is already stable
+    if (!piece.stable) {
+      collapsePiece(this.state, column, row, piece);
+    }
   }
 
   get occupation() {
@@ -160,6 +170,7 @@ td div.small {
   height: 45px;
   margin: 2px;
   font-size: 25px;
+  cursor: pointer;
 }
 td div.player1 {
   border-color: red;
