@@ -25,7 +25,7 @@
         :set="(col = occupation[column]?.[row])"
         :class="{ empty: col === undefined }"
       >
-        <span
+        <div
           v-for="cell in col"
           :key="cell.id"
           :class="{
@@ -35,7 +35,7 @@
           }"
         >
           {{ cell.id }}
-        </span>
+        </div>
       </td>
     </tr>
   </table>
@@ -142,7 +142,7 @@ td.empty {
   background-color: rgb(100, 100, 100, 0.2);
 }
 
-td span {
+td div {
   border: 16px solid blue;
   border-radius: 100%;
   box-sizing: border-box;
@@ -154,17 +154,42 @@ td span {
   font-size: 51px;
   font-weight: bold;
 }
-td span.small {
+td div.small {
   border-width: 8px;
   width: 45px;
   height: 45px;
   margin: 2px;
   font-size: 25px;
 }
-td span.player1 {
+td div.player1 {
   border-color: red;
 }
-td span.color {
-  border-color: green;
+
+td div.color {
+  position: relative;
+  border-color: transparent;
+  background: white;
+  background-clip: padding-box;
+}
+td div.color:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  background: linear-gradient(90deg, blue, red);
+  border-radius: inherit;
+  z-index: -1;
+  margin: -16px;
+
+  animation: spin 4s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
