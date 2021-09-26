@@ -10,11 +10,17 @@
     @placeSpace="placeSpace"
     @placeColor="placeColor"
   />
+  <Alert
+    title="Illegal move!"
+    message="That move is illegal! It cannot be completed in any of the possible world states."
+    ref="modal"
+  />
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import GameBoard from "./components/GameBoard.vue";
+import Alert from "./components/Alert.vue";
 import { emptyGame, GameState, Piece } from "./GameState";
 import { reactive } from "vue";
 import {
@@ -40,6 +46,7 @@ import {
   },
   components: {
     GameBoard,
+    Alert,
   },
 })
 export default class App extends Vue {
@@ -47,7 +54,9 @@ export default class App extends Vue {
   private colorPiece?: Piece = undefined;
 
   placeClassical(column: number) {
-    insertClassicPiece(this.state, column);
+    if (!insertClassicPiece(this.state, column)) {
+      (this.$refs.modal as Alert).showModal = true;
+    }
   }
   placeColor(column: number) {
     if (this.colorPiece === undefined) {
