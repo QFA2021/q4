@@ -2,29 +2,37 @@
   <table>
     <tr>
       <th v-for="column in state.width" :key="column">
-        <button @click="placeClassical(column)">Classic</button>
-        <button
-          @click="prepare(column)"
-          v-if="preparedColumn === undefined"
-        >
-          Quantum
-        </button>
-        <button @click="placeSpace(column)" v-else-if="preparedColumn != column">Space</button>
-        <button @click="preparedColumn = undefined" v-else>Reset</button>
+        <button @click="placeColor(column)">Color</button>
+        <template v-if="!colorPiece">
+          <button @click="placeClassical(column)">Classic</button>
+          <button @click="prepare(column)" v-if="preparedColumn === undefined">
+            Quantum
+          </button>
+          <button
+            @click="placeSpace(column)"
+            v-else-if="preparedColumn != column"
+          >
+            Space
+          </button>
+          <button @click="preparedColumn = undefined" v-else>Reset</button>
+        </template>
       </th>
     </tr>
     <tr v-for="row in state.height" :key="row">
       <td
         v-for="column in state.width"
         :key="column"
-        :style="occupationStyle(row, column)"
         :set="(col = occupation[column]?.[row])"
         :class="{ empty: col === undefined }"
       >
         <span
           v-for="cell in col"
           :key="cell.id"
-          :class="{ small: !cell.stable, player1: cell.player1 }"
+          :class="{
+            small: !cell.stable,
+            player1: cell.player1,
+            color: cell.colorID !== undefined,
+          }"
         >
           {{ cell.id }}
         </span>
@@ -40,6 +48,7 @@ import { GameState, World, Piece } from "../GameState";
 @Options({
   props: {
     state: Object,
+    colorPiece: Boolean,
   },
   data() {
     return {
@@ -50,13 +59,18 @@ import { GameState, World, Piece } from "../GameState";
 })
 export default class GameBoard extends Vue {
   state!: GameState;
+  colorPiece!: Boolean;
   preparedColumn?: number;
 
   prepare(column: number) {
     this.preparedColumn = column;
   }
-  placeClassical(column: number){
+  placeClassical(column: number) {
     this.$emit("placeClassical", column);
+    this.preparedColumn = undefined;
+  }
+  placeColor(column: number) {
+    this.$emit("placeColor", column);
     this.preparedColumn = undefined;
   }
   placeSpace(column: number) {
@@ -102,14 +116,6 @@ export default class GameBoard extends Vue {
     }
 
     return res;
-  }
-
-  occupationStyle(row: number, column: number) {
-    const data = this.occupation[column]?.[row];
-
-    return {
-      // "background-color": Math.random() < 0.5 ? "red" : "blue",
-    };
   }
 }
 </script>
@@ -157,5 +163,8 @@ td span.small {
 }
 td span.player1 {
   border-color: red;
+}
+td span.color {
+  border-color: green;
 }
 </style>

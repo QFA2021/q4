@@ -5,17 +5,24 @@
   </h1>
   <GameBoard
     :state="state"
+    :colorPiece="colorPiece !== undefined"
     @placeClassical="placeClassical"
     @placeSpace="placeSpace"
+    @placeColor="placeColor"
   />
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import GameBoard from "./components/GameBoard.vue";
-import { emptyGame, GameState } from "./GameState";
+import { emptyGame, GameState, Piece } from "./GameState";
 import { reactive } from "vue";
-import { insertClassicPiece, insertSpacePiece } from "./GameLogic";
+import {
+  insertClassicPiece,
+  insertColorPiece,
+  insertSecondColorPiece,
+  insertSpacePiece,
+} from "./GameLogic";
 
 @Options({
   props: {
@@ -26,15 +33,31 @@ import { insertClassicPiece, insertSpacePiece } from "./GameLogic";
       },
     },
   },
+  data() {
+    return {
+      colorPiece: undefined,
+    };
+  },
   components: {
     GameBoard,
   },
 })
 export default class App extends Vue {
   state!: GameState;
+  private colorPiece?: Piece = undefined;
 
   placeClassical(column: number) {
     insertClassicPiece(this.state, column);
+  }
+  placeColor(column: number) {
+    if (this.colorPiece === undefined) {
+      // first color piece
+      this.colorPiece = insertColorPiece(this.state, column);
+    } else {
+      // second color piece
+      insertSecondColorPiece(this.state, column, this.colorPiece);
+      this.colorPiece = undefined;
+    }
   }
   placeSpace(...columns: number[]) {
     insertSpacePiece(this.state, columns);

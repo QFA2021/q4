@@ -18,6 +18,33 @@ export function insertClassicPiece(state: GameState, column: number) {
     state.next_player = !state.next_player
 }
 
+export function insertColorPiece(state: GameState, column: number): Piece {
+    const piece = nextPiece(state)
+    piece.colorID = state.next_color_id++
+
+    // TODO: handle the case where no worlds remain
+    state.worlds = state.worlds.filter(world => insertPiece(state.height, world, column, piece))
+    state.next_stone_id++
+    state.next_player = !state.next_player
+
+    return piece
+}
+
+export function insertSecondColorPiece(state: GameState, column: number, piecePrimary: Piece) {
+    // TODO: use the same id?
+    const piece: Piece = {
+        id: piecePrimary.id,
+        player1: piecePrimary.player1,
+        stable: piecePrimary.stable,
+        colorID: piecePrimary.colorID
+    }
+
+    // TODO: handle the case where no worlds remain
+    state.worlds = state.worlds.filter(world => insertPiece(state.height, world, column, piece))
+    state.next_stone_id++
+    state.next_player = !state.next_player
+}
+
 export function insertSpacePiece(state: GameState, columns: number[]) {
     const piece = nextPiece(state)
 
