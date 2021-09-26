@@ -20,7 +20,7 @@
   />
 
   <footer>
-    <p>&copy; {{ copyright.join(", ") }}</p>
+    <p>&copy; {{ copyright }}</p>
   </footer>
 </template>
 
@@ -51,7 +51,7 @@ import {
     return {
       state: emptyGame(7, 6),
       colorPiece: undefined,
-      copyright: names,
+      copyright: names.join(", ") + " " + (new Date()).getFullYear(),
     };
   },
   components: {
@@ -62,7 +62,7 @@ import {
 export default class App extends Vue {
   state!: GameState;
   colorPiece?: Piece = undefined;
-  private copyright!: string[];
+  private copyright!: string;
 
   placeClassical(column: number) {
     if (!insertClassicPiece(this.state, column)) {
