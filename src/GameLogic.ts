@@ -9,13 +9,31 @@ function nextPiece(state: GameState): Piece {
     }
 }
 
+export function printgs(state: GameState) {
+    for (const world of state.worlds) {
+        for (const column in world) {
+            for (const row in world[column]) {
+                console.log(row)
+            }
+        }
+        break; // only show 1 world
+    }
+}
+
 export function insertClassicPiece(state: GameState, column: number) {
     const piece = nextPiece(state)
 
-    // TODO: handle the case where no worlds remain
-    state.worlds = state.worlds.filter(world => insertPiece(state.height, world, column, piece))
-    state.next_stone_id++
-    state.next_player = !state.next_player
+    const newWorlds = state.worlds.filter(world => insertPiece(state.height, world, column, piece))
+
+    if (state.worlds.length == 0) {
+        console.log("Illegal move!");
+        // TODO: handle the case where no worlds remain
+        //alert("Illegal move!");
+    } else {
+        state.worlds = newWorlds;
+        state.next_stone_id++;
+        state.next_player = !state.next_player;
+    }
 }
 
 export function insertColorPiece(state: GameState, column: number): Piece {
@@ -45,6 +63,7 @@ export function insertSecondColorPiece(state: GameState, column: number, piecePr
     state.next_player = !state.next_player
 }
 
+// insert piece: superposition in location
 export function insertSpacePiece(state: GameState, columns: number[]) {
     const piece = nextPiece(state)
 
