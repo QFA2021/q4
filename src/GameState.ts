@@ -21,8 +21,13 @@ export interface WorldRow<T> {
 export interface Piece {
     id: number,
     player1: boolean, // true iff inserted by first player
-    colorID?: number, // optional, exists iff it's superposition in color
-    stable: boolean
+
+    // used by ui to mark pieces that are stable/already in the final position
+    stable: boolean,
+
+    // optional for pieces in color-supoerposition
+    colorID?: number,
+    colorPieceOther?: Piece, // reference to the other piece
 }
 
 export function emptyGame(width: number, height: number): GameState {

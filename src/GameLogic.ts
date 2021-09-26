@@ -57,8 +57,10 @@ export function insertSecondColorPiece(state: GameState, column: number, piecePr
         id: piecePrimary.id,
         player1: piecePrimary.player1,
         stable: piecePrimary.stable,
-        colorID: piecePrimary.colorID
+        colorID: piecePrimary.colorID,
+        colorPieceOther: piecePrimary
     }
+    piecePrimary.colorPieceOther = piece
 
     // TODO: handle the case where no worlds remain
     state.worlds = state.worlds.filter(world => insertPiece(state.height, world, column, piece))
@@ -111,7 +113,25 @@ function cloneWorld<T>(world: World<T>): World<T> {
  * Only keep worlds where piece is in (column, row)
  */
 export function collapsePiece(state: GameState, column: number, row: number, piece: Piece) {
-    state.worlds = state.worlds.filter(world => {
-        return world[column]?.[row] === piece
-    });
+    if (piece.colorPieceOther === undefined) {
+        state.worlds = state.worlds.filter(world => {
+            return world[column]?.[row] === piece
+        });
+    } else {
+        // piece is in color superposition
+        const pieceOther = piece.colorPieceOther;
+
+        // mark the clicked piece as belonging to the player
+        piece.colorID = undefined;
+        piece.colorPieceOther = undefined;
+        piece.player1 = state.next_player;
+
+        // mark the other piece as belonging to the opponent
+        pieceOther.colorID = undefined;
+        pieceOther.colorPieceOther = undefined;
+        pieceOther.id++;
+        pieceOther.player1 = !state.next_player;
+    }
+
+    // TODO: is it the other players turn now?
 }

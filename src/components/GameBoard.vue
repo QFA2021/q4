@@ -43,7 +43,6 @@
 </template>
 
 <script lang="ts">
-import { collapsePiece } from "@/GameLogic";
 import { Options, Vue } from "vue-class-component";
 import { GameState, World, Piece } from "../GameState";
 
@@ -83,7 +82,7 @@ export default class GameBoard extends Vue {
   collapse(column: number, row: number, piece: Piece) {
     // only keep worlds where piece is in (column, row)
     // ignore events, where the piece is already stable
-    if (!piece.stable) {
+    if (!piece.stable || piece.colorID !== undefined) {
       this.$emit("manualCollapse", column, row, piece);
     }
   }
