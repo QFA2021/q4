@@ -18,6 +18,10 @@
     message="That move is illegal! It cannot be completed in any of the possible world states."
     ref="modal"
   />
+
+  <footer>
+    <p>&copy; {{ copyright.join(", ") }}</p>
+  </footer>
 </template>
 
 <script lang="ts">
@@ -25,7 +29,6 @@ import { Options, Vue } from "vue-class-component";
 import GameBoard from "./components/GameBoard.vue";
 import Alert from "./components/Alert.vue";
 import { emptyGame, GameState, Piece } from "./GameState";
-import { reactive } from "vue";
 import {
   collapsePiece,
   insertClassicPiece,
@@ -35,17 +38,20 @@ import {
 } from "./GameLogic";
 
 @Options({
-  props: {
-    state: {
-      type: Object,
-      default() {
-        return reactive(emptyGame(7, 6));
-      },
-    },
-  },
   data() {
+    // shuffle names
+    const names = ["Magnus Kühn", "Robert Junge", "Hazem Riahi"];
+    for (let i = names.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      const temp = names[i];
+      names[i] = names[j];
+      names[j] = temp;
+    }
+
     return {
+      state: emptyGame(7, 6),
       colorPiece: undefined,
+      copyright: names,
     };
   },
   components: {
@@ -55,7 +61,8 @@ import {
 })
 export default class App extends Vue {
   state!: GameState;
-  private colorPiece?: Piece = undefined;
+  colorPiece?: Piece = undefined;
+  private copyright!: string[];
 
   placeClassical(column: number) {
     if (!insertClassicPiece(this.state, column)) {
@@ -121,5 +128,10 @@ h1 span {
 }
 h1 span.player1 {
   color: red;
+}
+
+footer {
+  margin-top: 20px;
+  border-top: 1px solid gray;
 }
 </style>
