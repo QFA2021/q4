@@ -11,8 +11,8 @@ function nextPiece(state: GameState): Piece {
 
 export function printgs(state: GameState) {
     for (const world of state.worlds) {
-        for (const column in world) {
-            for (const row in world[column]) {
+        for (const column in world.data) {
+            for (const row in world.data[column]) {
                 console.log(row)
             }
         }
@@ -97,11 +97,14 @@ export function insertSpacePiece(state: GameState, columns: number[]): boolean {
 }
 
 function cloneWorld<T>(world: World<T>): World<T> {
-    const newWorld = {} as World<T>;
-    for (const column in world) {
-        newWorld[column] = {};
-        for (const row in world[column]) {
-            newWorld[column][row] = world[column][row];
+    const newWorld = {
+        data: {},
+        winner: world.winner
+    } as World<T>;
+    for (const column in world.data) {
+        newWorld.data[column] = {};
+        for (const row in world.data[column]) {
+            newWorld.data[column][row] = world.data[column][row];
         }
     }
 
@@ -115,7 +118,7 @@ function cloneWorld<T>(world: World<T>): World<T> {
 export function collapsePiece(state: GameState, column: number, row: number, piece: Piece) {
     if (piece.colorPieceOther === undefined) {
         state.worlds = state.worlds.filter(world => {
-            return world[column]?.[row] === piece
+            return world.data[column]?.[row] === piece
         });
     } else {
         // piece is in color superposition

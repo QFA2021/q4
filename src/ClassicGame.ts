@@ -1,4 +1,4 @@
-import { World, WorldRow, Piece, GameState } from "./GameState";
+import { World, Piece } from "./GameState";
 
 /**
  * Inserts $piece into $world at column $column
@@ -6,13 +6,13 @@ import { World, WorldRow, Piece, GameState } from "./GameState";
  * Returns false iff the move is illegal
  */
 export function insertPiece(height: number, world: World<Piece>, column: number, piece: Piece): boolean {
-    if (column in world) {
+    if (column in world.data) {
         let row = height
         while (row >= 1) {
-            if (row in world[column]) {
+            if (row in world.data[column]) {
                 row--
             } else {
-                world[column][row] = piece
+                world.data[column][row] = piece
                 return true
             }
         }
@@ -22,8 +22,8 @@ export function insertPiece(height: number, world: World<Piece>, column: number,
     }
 
     // column is empty so far
-    world[column] = {}
-    world[column][height] = piece
+    world.data[column] = {}
+    world.data[column][height] = piece
     return true
 }
 
@@ -76,7 +76,7 @@ function checkWinnerDirection(height: number, width: number,
     let player1 = undefined
 
     while (row <= height && column <= width) {
-        const nextPlayer1 = world[row]?.[column]?.player1
+        const nextPlayer1 = world.data[row]?.[column]?.player1
         if (nextPlayer1 != player1) {
             count = 0
             player1 = nextPlayer1

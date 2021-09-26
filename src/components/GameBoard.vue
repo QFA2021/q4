@@ -45,7 +45,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { GameState, World, Piece } from "../GameState";
+import { GameState, Piece, WorldStack } from "../GameState";
 
 @Options({
   props: {
@@ -90,24 +90,24 @@ export default class GameBoard extends Vue {
 
   get occupation() {
     // for each cell collect the pieces that occur there
-    const res: World<Set<Piece>> = {};
+    const res: WorldStack<WorldStack<Set<Piece>>> = {};
 
     // detect if a piece occures at multiple positions accross worlds
     const piecePos = new Map<Piece, { row: string; column: string }>();
 
     for (const world of this.state.worlds) {
-      for (const column in world) {
+      for (const column in world.data) {
         if (!(column in res)) {
           res[column] = {};
         }
 
-        for (const row in world[column]) {
+        for (const row in world.data[column]) {
           if (!(row in res[column])) {
             res[column][row] = new Set();
           }
 
           // piece has occured at (column, row)
-          const piece = world[column][row];
+          const piece = world.data[column][row];
           res[column][row].add(piece);
 
           // check if piece occured at a different position

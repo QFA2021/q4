@@ -2,19 +2,24 @@ export interface GameState {
     // board dimensions
     width: number,
     height: number,
+
     // internal/invisible state
     next_player: boolean, // true iff its the red player's turn
     next_stone_id: number, // ID of next move to be done by a player
     next_color_id: number,
+
     // board state
     worlds: World<Piece>[],
 }
 
 export interface World<T> {
-    [index: number]: WorldRow<T>
+    data: WorldStack<WorldStack<T>>,
+
+    // undefined ~> no winner yet
+    winner?: Boolean,
 }
 
-export interface WorldRow<T> {
+export interface WorldStack<T> {
     [index: number]: T
 }
 
@@ -38,6 +43,8 @@ export function emptyGame(width: number, height: number): GameState {
         next_stone_id: 1,
         next_color_id: 1,
 
-        worlds: [{}]
+        worlds: [{
+            data: {}
+        }]
     }
 }
