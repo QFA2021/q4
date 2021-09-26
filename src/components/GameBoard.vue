@@ -180,6 +180,7 @@ td div.color {
   border-color: transparent;
   background: white;
   background-clip: padding-box;
+  cursor: pointer;
 }
 td div.color:before {
   content: "";
