@@ -1,11 +1,4 @@
 <template>
-  <p>
-    total worlds: {{ state.worlds.length }}, red won: {{ winning.red }}, blue
-    won: {{ winning.blue
-    }}<template v-if="winning.red + winning.blue >= state.worlds.length"
-      >, <span style="font-weight: bold">All games won!</span>
-    </template>
-  </p>
   <table>
     <tr class="controls">
       <th v-for="column in state.width" :key="column">
@@ -61,19 +54,7 @@
           @click="collapse(column, row, piece)"
           @mouseover="highlight = { column: column, row: row, piece: piece }"
           @mouseleave="highlight = undefined"
-          :title="
-            getPieceActionHint(piece) +
-            '\nID:' +
-            piece.id +
-            '\nPlayer: ' +
-            piece.player1 +
-            '\nstable: ' +
-            piece.stable +
-            '\ncolorID: ' +
-            piece.colorID +
-            '\ncolorORef: ' +
-            piece.colorPieceOther
-          "
+          :title="getPieceActionHint(piece) + getActionPieceDebug(piece)"
         >
           {{ piece.id }}
         </div>
@@ -84,12 +65,12 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { isSuperposColorPiece, isFullySetSuperposColorPiece } from "@/GameLogic";
-import { GameState, Piece } from "@/GameState";
 import {
-  computeWorldOccupationFilter,
-  playerToColor
-} from "@/GameVisual";
+  isSuperposColorPiece,
+  isFullySetSuperposColorPiece,
+} from "@/GameLogic";
+import { GameState, Piece } from "@/GameState";
+import { computeWorldOccupationFilter, playerToColor } from "@/GameVisual";
 
 interface Highlight {
   column: number;
@@ -118,16 +99,30 @@ export default class GameBoard extends Vue {
   getPieceActionHint(p: Piece): string {
     if (isSuperposColorPiece(p)) {
       if (isFullySetSuperposColorPiece(p)) {
-        return "Click this to collapse it to " + playerToColor(this.state.next_player)
+        return (
+          "Click this to collapse it to " +
+          playerToColor(this.state.next_player)
+        );
       } else {
-        return "Choose a position for the other piece"
+        return "You need to choose a position for the other piece first";
       }
     }
     // TODO not ideal but works
     if (!p.stable) {
-      return "Click to collapse here"
+      return "Click to collapse here";
     }
-    return ""
+    return "";
+  }
+
+  getActionPieceDebug(piece: Piece): string {
+    return process.env.NODE_ENV === "production"
+      ? ""
+      : `
+ID: ${piece.id}
+player: ${piece.player1} ${playerToColor(piece.player1)}
+stable: ${piece.stable}
+colorID: ${piece.colorID}
+colorORef: ${piece.colorPieceOther}`;
   }
 
   prepare(column: number) {
@@ -153,15 +148,6 @@ export default class GameBoard extends Vue {
       this.$emit("manualCollapse", column, row, piece);
       this.highlight = undefined;
     }
-  }
-
-  get winning() {
-    const counts = { red: 0, blue: 0, total: this.state.worlds.length };
-    this.state.worlds
-      .filter((world) => world.winner !== undefined)
-      .forEach((world) => counts[world.winner ? "red" : "blue"]++);
-
-    return counts;
   }
 
   get highlightOccupancy() {
