@@ -29,7 +29,7 @@
       <td
         v-for="column in state.width"
         :key="column"
-        :set="(col = occupation[column]?.[row])"
+        :set="(col = state.occupancyCache[column]?.[row])"
         :class="{ empty: col === undefined }"
       >
         <div
@@ -52,7 +52,7 @@
                 piece.colorID !== highlight?.piece?.colorID),
             highlight:
               // non-color non-stable is highlighted ~> highlight pieces in resulting remaining worlds
-              highlightOccupation[column]?.[row]?.has(piece),
+              highlightOccupancy[column]?.[row]?.has(piece),
             highlightColor:
               // part of highlighted color superposition piece
               piece.colorPieceOther !== undefined &&
@@ -84,10 +84,7 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import { GameState, Piece } from "@/GameState";
-import {
-  computeWorldOccupation,
-  computeWorldOccupationFilter,
-} from "@/GameVisual";
+import { computeWorldOccupationFilter } from "@/GameVisual";
 
 interface Highlight {
   column: number;
@@ -148,11 +145,7 @@ export default class GameBoard extends Vue {
     return counts;
   }
 
-  get occupation() {
-    return computeWorldOccupation(this.state);
-  }
-
-  get highlightOccupation() {
+  get highlightOccupancy() {
     // no highlight occupation for color superposition or stable pieces
     return this.highlight === undefined ||
       this.highlight.piece.stable ||

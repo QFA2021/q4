@@ -1,5 +1,6 @@
 import { computeWinner, insertPiece } from "./ClassicGame";
 import { GameState, Piece, World } from "./GameState";
+import { computeWorldOccupation } from "./GameVisual";
 
 function nextPiece(state: GameState): Piece {
     return {
@@ -40,6 +41,9 @@ function internalPieceInsert(state: GameState, column: number, piece: Piece) {
     state.worlds = newWorlds;
     state.next_stone_id++;
     state.next_player = !state.next_player;
+
+    // update occupancy cache and piece stability
+    state.occupancyCache = computeWorldOccupation(state)
     return true;
 }
 
@@ -98,6 +102,9 @@ export function insertSpacePiece(state: GameState, columns: number[]): boolean {
     state.worlds = newWorlds
     state.next_stone_id++
     state.next_player = !state.next_player
+
+    // update occupancy cache and piece stability
+    state.occupancyCache = computeWorldOccupation(state)
     return true
 }
 
@@ -147,6 +154,9 @@ export function collapsePiece(state: GameState, column: number, row: number, pie
             }
         }
     }
+
+    // update occupancy cache and piece stability
+    state.occupancyCache = computeWorldOccupation(state)
 
     // TODO: is it the other players turn now?
 }

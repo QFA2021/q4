@@ -10,6 +10,10 @@ export interface GameState {
 
     // board state
     worlds: World<Piece>[],
+
+    // cache for board occupancy
+    // for each cell we store the set of pieces that occur there in *any* world
+    occupancyCache: WorldStack<WorldStack<Set<Piece>>>,
 }
 
 export interface World<T> {
@@ -45,6 +49,7 @@ export function emptyGame(width: number, height: number): GameState {
 
         worlds: [{
             data: {}
-        }]
+        }],
+        occupancyCache: {}
     }
 }
