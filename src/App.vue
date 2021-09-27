@@ -2,7 +2,7 @@
   <h1>
     <img src="@/assets/Title.svg" height="50" width="144" alt="q4 Logo" />
     <span :class="{ player1: state.next_player }"
-      >Next player: {{ getCurrentPlayerColor(state) }}</span
+      >Next player: {{ getCurrentPlayerColor(state.next_player) }}</span
     >
   </h1>
   <GameBoard
@@ -18,6 +18,15 @@
     message="That move is illegal! It cannot be completed in any of the possible world states."
     ref="modal"
   />
+  <Alert
+    title="Game Over!"
+    :message="
+      'Player ' +
+      getCurrentPlayerColor(totalWinner1) +
+      ' has won in all situtations!'
+    "
+    ref="modalWin"
+  />
 
   <footer>
     <p>&copy; {{ copyright }}</p>
@@ -28,8 +37,8 @@
 import { Options, Vue } from "vue-class-component";
 import GameBoard from "@/components/GameBoard.vue";
 import Alert from "@/components/Alert.vue";
-import { emptyGame, GameState, Piece } from "./GameState";
-import { playerToColor } from "./GameVisual";
+import { emptyGame, GameState, Piece } from "@/GameState";
+import { playerToColor } from "@/GameVisual";
 import {
   collapsePiece,
   insertClassicPiece,
@@ -53,22 +62,19 @@ import {
       state: emptyGame(7, 6),
       colorPiece: undefined,
       copyright: names.join(", ") + " " + new Date().getFullYear(),
+      gameWonShowed: false,
     };
   },
   components: {
     GameBoard,
     Alert,
   },
-  methods: {
-      getCurrentPlayerColor: function (state: GameState) {
-        return playerToColor(state.next_player)
-      }
-    },
 })
 export default class App extends Vue {
   state!: GameState;
   colorPiece?: Piece = undefined;
   private copyright!: string;
+  private gameWonShowed!: boolean;
 
   placeClassical(column: number) {
     if (!insertClassicPiece(this.state, column)) {
@@ -79,7 +85,8 @@ export default class App extends Vue {
     if (this.colorPiece === undefined) {
       // first color piece
       this.colorPiece = insertColorPiece(this.state, column);
-      if (this.colorPiece === undefined) { // illegal move
+      if (this.colorPiece === undefined) {
+        // illegal move
         (this.$refs.modal as Alert).showModal = true;
       }
     } else {
@@ -99,6 +106,26 @@ export default class App extends Vue {
 
   manualCollapse(column: number, row: number, piece: Piece) {
     collapsePiece(this.state, column, row, piece);
+  }
+
+  get totalWinner1() {
+    const winners = new Set(this.state.worlds.map((world) => world.winner));
+    if (winners.size !== 1) {
+      return undefined;
+    }
+
+    const winner1 = winners.values().next().value;
+    if (winner1 !== undefined && !this.gameWonShowed) {
+      // todo: move this out of getter
+      this.gameWonShowed = true;
+      (this.$refs.modalWin as Alert).showModal = true;
+    }
+
+    return winner1;
+  }
+
+  getCurrentPlayerColor(player: boolean) {
+    return playerToColor(player);
   }
 }
 </script>

@@ -20,16 +20,6 @@ export function isFullySetSuperposColorPiece(p: Piece): boolean {
     return p.colorID !== undefined && p.colorPieceOther !== undefined
 }
 
-export function printgs(state: GameState) {
-    for (const world of state.worlds) {
-        for (const column in world.data) {
-            for (const row in world.data[column]) {
-                console.log(row)
-            }
-        }
-        break; // only show 1 world
-    }
-}
 
 // return true iff insertion is okay
 export function insertClassicPiece(state: GameState, column: number): boolean {
@@ -40,7 +30,7 @@ function internalPieceInsert(state: GameState, column: number, piece: Piece) {
     // insert piece mutates the world iff it returns true
     // thus any mutation implies newWorlds.length > 0
     // ~> no need to copy the world
-    const newWorlds = state.worlds.filter(world => insertPiece(state.height, state.width, world, column, piece));
+    const newWorlds = state.worlds.filter(world => insertPiece(state.height, world, column, piece));
 
     // reject if no world remains
     if (newWorlds.length === 0) {
@@ -51,10 +41,24 @@ function internalPieceInsert(state: GameState, column: number, piece: Piece) {
     state.worlds = newWorlds;
     state.next_stone_id++;
     state.next_player = !state.next_player;
-
-    // update occupancy cache and piece stability
-    state.occupancyCache = computeWorldOccupation(state)
+    stepGame(state)
     return true;
+}
+
+/**
+ * Steps the game forward
+ * This needs to be called after every change to the worlds!
+ */
+function stepGame(state: GameState) {
+    // update occupancy and piece stability
+    state.occupancyCache = computeWorldOccupation(state)
+
+    // winner calculation
+    for (const world of state.worlds) {
+        if (world.winner === undefined) {
+            world.winner = computeWinner(state.height, state.width, world)
+        }
+    }
 }
 
 
@@ -97,7 +101,7 @@ export function insertSpacePiece(state: GameState, columns: number[]): boolean {
         // iterate over the insertion columns
         for (const column of columns) {
             const worldClone = cloneWorld(world);
-            if (insertPiece(state.height, state.width, worldClone, column, piece)) {
+            if (insertPiece(state.height, worldClone, column, piece)) {
                 newWorlds.push(worldClone)
             }
         }
@@ -166,7 +170,7 @@ export function collapsePiece(state: GameState, column: number, row: number, pie
     }
 
     // update occupancy cache and piece stability
-    state.occupancyCache = computeWorldOccupation(state)
+    stepGame(state)
 
     // TODO: is it the other players turn now?
 }

@@ -7,8 +7,7 @@ import { World, Piece } from "./GameState";
  * Returns true iff the world was mutated
  * ~> returns false iff the move is illegal
  */
-export function insertPiece(height: number, width: number,
-    world: World<Piece>, column: number, piece: Piece): boolean {
+export function insertPiece(height: number, world: World<Piece>, column: number, piece: Piece): boolean {
     if (column in world.data) {
         let row = height
         while (row >= 1) {
@@ -16,10 +15,6 @@ export function insertPiece(height: number, width: number,
                 row--
             } else {
                 world.data[column][row] = piece
-                if (world.winner === undefined) {
-                    world.winner = computeWinner(height, width, world)
-                }
-
                 return true
             }
         }
@@ -31,19 +26,15 @@ export function insertPiece(height: number, width: number,
     // column is empty so far
     world.data[column] = {}
     world.data[column][height] = piece
-    if (world.winner === undefined) {
-        world.winner = computeWinner(height, width, world)
-    }
-
     return true
 }
 
 const WIN_LENGTH = 4;
-export function computeWinner(height: number, width: number, world: World<Piece>) {
+export function computeWinner(height: number, width: number, world: World<Piece>, onlyStable: boolean = true) {
     // columns
     for (let column = 1; column <= width; column++) {
         const winner = checkWinnerDirection(height, width, world,
-            1, column, 1, 0);
+            1, column, 1, 0, onlyStable);
         if (winner !== undefined) {
             return winner;
         }
@@ -52,14 +43,14 @@ export function computeWinner(height: number, width: number, world: World<Piece>
         for (let row = 1; row <= height - WIN_LENGTH; row++) {
             // check diagonal going to top right
             const winnerTop = checkWinnerDirection(height, width, world,
-                row, column, 1, -1);
+                row, column, 1, -1, onlyStable);
             if (winnerTop !== undefined) {
                 return winnerTop;
             }
 
             // check diagonal going to bottom right
             const winnerBottom = checkWinnerDirection(height, width, world,
-                row, column, 1, 1);
+                row, column, 1, 1, onlyStable);
             if (winnerBottom !== undefined) {
                 return winnerBottom;
             }
@@ -82,17 +73,19 @@ export function computeWinner(height: number, width: number, world: World<Piece>
  */
 function checkWinnerDirection(height: number, width: number,
     world: World<Piece>, row: number, column: number,
-    rowD: number, columnD: number): boolean | undefined {
+    rowD: number, columnD: number, onlyStable: boolean = true): boolean | undefined {
     let count = 0
     let player1 = undefined
 
     while (row <= height && column <= width) {
-        if (world.data[column]?.[row]?.colorID !== undefined) {
-            // ignore color pieces
+        const cell = world.data[column]?.[row]
+        if (cell === undefined || cell.colorID !== undefined || (onlyStable && !cell.stable)) {
+            // always ignore color pieces
+            // only use stable cells if specified
             count = 0
             player1 = undefined
         } else {
-            const nextPlayer1 = world.data[column]?.[row]?.player1
+            const nextPlayer1 = cell?.player1
             if (nextPlayer1 !== player1) {
                 count = 1
                 player1 = nextPlayer1
