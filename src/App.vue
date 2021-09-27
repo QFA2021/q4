@@ -1,6 +1,6 @@
 <template>
   <h1>
-    <img src="./assets/Title.svg" height="50" width="144" alt="q4 Logo" />
+    <img src="@/assets/Title.svg" height="50" width="144" alt="q4 Logo" />
     <span :class="{ player1: state.next_player }"
       >Next player: {{ state.next_player ? "Red" : "Blue" }}</span
     >
@@ -26,8 +26,8 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import GameBoard from "./components/GameBoard.vue";
-import Alert from "./components/Alert.vue";
+import GameBoard from "@/components/GameBoard.vue";
+import Alert from "@/components/Alert.vue";
 import { emptyGame, GameState, Piece } from "./GameState";
 import {
   collapsePiece,

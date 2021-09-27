@@ -6,6 +6,7 @@
           <span>{{ title }}</span>
           <button aria-label="Close">×</button>
         </h2>
+        <img src="@/assets/Title.svg" height="111" width="320" alt="q4 Logo" />
         <p>{{ message }}</p>
       </div>
     </div>
@@ -65,7 +66,7 @@ export default class Alert extends Vue {
   width: 420px;
   background: white;
   border-radius: 5px;
-  margin: 120px auto 0;
+  margin: 80px auto 0;
   cursor: default;
 
   will-change: transform;
@@ -99,7 +100,20 @@ button {
 }
 
 p {
-  padding: 10px 50px 30px;
+  padding: 20px 50px 30px;
   font-size: 1rem;
+}
+
+img {
+  animation: wiggle 1s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes wiggle {
+  0% {
+    transform: rotate(-10deg) translateX(-10px);
+  }
+  100% {
+    transform: rotate(10deg) translateX(10px);
+  }
 }
 </style>
