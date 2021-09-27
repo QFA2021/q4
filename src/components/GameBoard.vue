@@ -39,21 +39,23 @@
             small: !piece.stable,
             player1:
               // no color superposition ~> use piece player
-              (piece.player1 && piece.colorID === undefined) ||
+              (piece.player1 && piece.colorPieceOther === undefined) ||
               // color superposition and one of the options is hovered
-              (piece.colorID !== undefined &&
+              (piece.colorPieceOther !== undefined &&
                 piece.colorID === highlight?.piece?.colorID &&
                 // then highlight hovered piece in next player color
                 !((piece === highlight.piece) ^ state.next_player)),
             color:
               piece.colorID !== undefined &&
-              piece.colorID !== highlight?.piece?.colorID,
+              // no highlighting when 2nd piece missing (i.e. when colorPieceOther = undefined)
+              (piece.colorPieceOther === undefined ||
+                piece.colorID !== highlight?.piece?.colorID),
             highlight:
               // non-color non-stable is highlighted ~> highlight pieces in resulting remaining worlds
               highlightOccupation[column]?.[row]?.has(piece),
             highlightColor:
               // part of highlighted color superposition piece
-              piece.colorID !== undefined &&
+              piece.colorPieceOther !== undefined &&
               piece.colorID === highlight?.piece?.colorID,
           }"
           @click="collapse(column, row, piece)"
@@ -131,7 +133,7 @@ export default class GameBoard extends Vue {
   collapse(column: number, row: number, piece: Piece) {
     // only keep worlds where piece is in (column, row)
     // ignore events, where the piece is already stable
-    if (!piece.stable || piece.colorID !== undefined) {
+    if (!piece.stable || piece.colorPieceOther !== undefined) {
       this.$emit("manualCollapse", column, row, piece);
       this.highlight = undefined;
     }
@@ -217,6 +219,7 @@ td div.highlight {
 }
 td div.highlightColor {
   background-color: greenyellow;
+  cursor: pointer;
 }
 
 td div.color {
@@ -224,7 +227,6 @@ td div.color {
   border-color: transparent;
   background: white;
   background-clip: padding-box;
-  cursor: pointer;
 }
 td div.color:before {
   content: "";
