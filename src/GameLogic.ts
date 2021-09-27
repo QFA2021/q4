@@ -20,19 +20,21 @@ export function printgs(state: GameState) {
     }
 }
 
-export function insertClassicPiece(state: GameState, column: number) {
+// return true iff insertion is okay
+export function insertClassicPiece(state: GameState, column: number): boolean {
     const piece = nextPiece(state)
 
     const newWorlds = state.worlds.filter(world => insertPiece(state.height, world, column, piece))
 
-    if (state.worlds.length == 0) {
+    if (newWorlds.length == 0) {
+        // no worlds remain
         console.log("Illegal move!");
-        // TODO: handle the case where no worlds remain
-        //alert("Illegal move!");
+        return false;
     } else {
         state.worlds = newWorlds;
         state.next_stone_id++;
         state.next_player = !state.next_player;
+        return true;
     }
 }
 

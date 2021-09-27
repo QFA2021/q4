@@ -2,7 +2,8 @@ import { World, WorldRow, Piece, GameState } from "./GameState";
 
 /**
  * Inserts $piece into $world at column $column
- * Returns false if the move is illegal
+ * Returns true if the world was mutated
+ * Returns false iff the move is illegal
  */
 export function insertPiece(height: number, world: World<Piece>, column: number, piece: Piece): boolean {
     if (column in world) {
