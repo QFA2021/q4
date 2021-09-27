@@ -23,7 +23,7 @@
     :message="
       'Player ' +
       getCurrentPlayerColor(totalWinner1) +
-      ' has won in all situtations!'
+      ' has won in all possible states of the game!'
     "
     ref="modalWin"
   />
