@@ -113,6 +113,7 @@ body {
 h1 {
   position: sticky;
   top: 0;
+  z-index: 10;
 
   height: 50px;
   margin: 10px 0;
@@ -122,7 +123,8 @@ h1 {
 }
 tr.controls {
   position: sticky;
-  top: 51px;
+  z-index: 10;
+  top: 50.5px;
   background: white;
 }
 
