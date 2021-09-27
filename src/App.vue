@@ -2,7 +2,7 @@
   <h1>
     <img src="@/assets/Title.svg" height="50" width="144" alt="q4 Logo" />
     <span :class="{ player1: state.next_player }"
-      >Next player: {{ state.next_player ? "Red" : "Blue" }}</span
+      >Next player: {{ getCurrentPlayerColor(state) }}</span
     >
   </h1>
   <GameBoard
@@ -29,6 +29,7 @@ import { Options, Vue } from "vue-class-component";
 import GameBoard from "@/components/GameBoard.vue";
 import Alert from "@/components/Alert.vue";
 import { emptyGame, GameState, Piece } from "./GameState";
+import { playerToColor } from "./GameVisual";
 import {
   collapsePiece,
   insertClassicPiece,
@@ -58,6 +59,11 @@ import {
     GameBoard,
     Alert,
   },
+  methods: {
+      getCurrentPlayerColor: function (state: GameState) {
+        return playerToColor(state.next_player)
+      }
+    },
 })
 export default class App extends Vue {
   state!: GameState;

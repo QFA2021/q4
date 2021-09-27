@@ -62,7 +62,8 @@
           @mouseover="highlight = { column: column, row: row, piece: piece }"
           @mouseleave="highlight = undefined"
           :title="
-            'ID:' +
+            getPieceActionHint(piece) +
+            '\nID:' +
             piece.id +
             '\nPlayer: ' +
             piece.player1 +
@@ -83,15 +84,18 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
+import { isSuperposColorPiece, isFullySetSuperposColorPiece } from "@/GameLogic";
 import { GameState, Piece } from "@/GameState";
-import { computeWorldOccupationFilter } from "@/GameVisual";
+import {
+  computeWorldOccupationFilter,
+  playerToColor
+} from "@/GameVisual";
 
 interface Highlight {
   column: number;
   row: number;
   piece: Piece;
 }
-
 @Options({
   props: {
     state: Object,
@@ -110,6 +114,21 @@ export default class GameBoard extends Vue {
   colorPiece!: Boolean;
   preparedColumn?: number;
   highlight?: Highlight;
+
+  getPieceActionHint(p: Piece): string {
+    if (isSuperposColorPiece(p)) {
+      if (isFullySetSuperposColorPiece(p)) {
+        return "Click this to collapse it to " + playerToColor(this.state.next_player)
+      } else {
+        return "Choose a position for the other piece"
+      }
+    }
+    // TODO not ideal but works
+    if (!p.stable) {
+      return "Click to collapse here"
+    }
+    return ""
+  }
 
   prepare(column: number) {
     this.preparedColumn = column;

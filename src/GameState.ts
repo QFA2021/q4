@@ -4,7 +4,7 @@ export interface GameState {
     height: number,
 
     // internal/invisible state
-    next_player: boolean, // true iff its the red player's turn
+    next_player: boolean, // true iff its the red player's turn. TODO rename to nextPlayerRed
     next_stone_id: number, // ID of next move to be done by a player
     next_color_id: number,
 

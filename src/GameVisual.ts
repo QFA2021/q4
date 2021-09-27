@@ -1,5 +1,9 @@
 import { GameState, Piece, WorldStack } from "./GameState";
 
+export function playerToColor(player_red: boolean): string {
+    return player_red ? "Red" : "Blue"
+}
+
 /**
  * Groups the pieces by the position they occur in some world.
  * Computes / updates all piece stability

@@ -10,6 +10,16 @@ function nextPiece(state: GameState): Piece {
     }
 }
 
+export function isSuperposColorPiece(p: Piece): boolean {
+    return p.colorID !== undefined
+}
+
+// Color pieces are two pieces inserted at different positions
+// Returns true iff both pieces are already inserted on the board
+export function isFullySetSuperposColorPiece(p: Piece): boolean {
+    return p.colorID !== undefined && p.colorPieceOther !== undefined
+}
+
 export function printgs(state: GameState) {
     for (const world of state.worlds) {
         for (const column in world.data) {
