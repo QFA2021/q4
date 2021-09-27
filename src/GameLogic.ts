@@ -1,4 +1,4 @@
-import { insertPiece } from "./ClassicGame";
+import { computeWinner, insertPiece } from "./ClassicGame";
 import { GameState, Piece, World } from "./GameState";
 
 function nextPiece(state: GameState): Piece {
@@ -22,14 +22,18 @@ export function printgs(state: GameState) {
 
 // return true iff insertion is okay
 export function insertClassicPiece(state: GameState, column: number): boolean {
-    const piece = nextPiece(state)
+    return internalPieceInsert(state, column, nextPiece(state))
+}
 
+function internalPieceInsert(state: GameState, column: number, piece: Piece) {
     // insert piece mutates the world iff it returns true
     // thus any mutation implies newWorlds.length > 0
     // ~> no need to copy the world
-    const newWorlds = state.worlds.filter(world => insertPiece(state.height, world, column, piece))
+    const newWorlds = state.worlds.filter(world => insertPiece(state.height, state.width, world, column, piece));
+
+    // reject if no world remains
     if (newWorlds.length === 0) {
-        return false;
+        return false
     }
 
     // step game forward and accept move
@@ -39,19 +43,19 @@ export function insertClassicPiece(state: GameState, column: number): boolean {
     return true;
 }
 
-export function insertColorPiece(state: GameState, column: number): Piece {
+
+export function insertColorPiece(state: GameState, column: number): Piece | undefined {
     const piece = nextPiece(state)
-    piece.colorID = state.next_color_id++
+    piece.colorID = state.next_color_id
+    if (internalPieceInsert(state, column, piece)) {
+        state.next_color_id++
+        return piece
+    }
 
-    // TODO: handle the case where no worlds remain
-    state.worlds = state.worlds.filter(world => insertPiece(state.height, world, column, piece))
-    state.next_stone_id++
-    state.next_player = !state.next_player
-
-    return piece
+    return undefined
 }
 
-export function insertSecondColorPiece(state: GameState, column: number, piecePrimary: Piece) {
+export function insertSecondColorPiece(state: GameState, column: number, piecePrimary: Piece): boolean {
     // TODO: use the same id?
     const piece: Piece = {
         id: piecePrimary.id,
@@ -60,12 +64,13 @@ export function insertSecondColorPiece(state: GameState, column: number, piecePr
         colorID: piecePrimary.colorID,
         colorPieceOther: piecePrimary
     }
-    piecePrimary.colorPieceOther = piece
 
-    // TODO: handle the case where no worlds remain
-    state.worlds = state.worlds.filter(world => insertPiece(state.height, world, column, piece))
-    state.next_stone_id++
-    state.next_player = !state.next_player
+    if (internalPieceInsert(state, column, piece)) {
+        piecePrimary.colorPieceOther = piece
+        return true
+    }
+
+    return false
 }
 
 // insert piece: superposition in location
@@ -78,7 +83,7 @@ export function insertSpacePiece(state: GameState, columns: number[]): boolean {
         // iterate over the insertion columns
         for (const column of columns) {
             const worldClone = cloneWorld(world);
-            if (insertPiece(state.height, worldClone, column, piece)) {
+            if (insertPiece(state.height, state.width, worldClone, column, piece)) {
                 newWorlds.push(worldClone)
             }
         }
@@ -134,6 +139,13 @@ export function collapsePiece(state: GameState, column: number, row: number, pie
         pieceOther.colorPieceOther = undefined;
         pieceOther.id++;
         pieceOther.player1 = !state.next_player;
+
+        // compute winners
+        for (const world of state.worlds) {
+            if (world.winner === undefined) {
+                world.winner = computeWinner(state.height, state.width, world)
+            }
+        }
     }
 
     // TODO: is it the other players turn now?

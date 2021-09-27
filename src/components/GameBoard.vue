@@ -1,4 +1,11 @@
 <template>
+  <p>
+    total worlds: {{ state.worlds.length }}, red won: {{ winning.red }}, blue
+    won: {{ winning.blue
+    }}<template v-if="winning.red + winning.blue >= state.worlds.length"
+      >, <span style="font-weight: bold">All games won!</span>
+    </template>
+  </p>
   <table>
     <tr class="controls">
       <th v-for="column in state.width" :key="column">
@@ -45,7 +52,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { GameState, Piece, WorldStack } from "../GameState";
+import { GameState, Piece, WorldStack } from "@/GameState";
 
 @Options({
   props: {
@@ -86,6 +93,15 @@ export default class GameBoard extends Vue {
     if (!piece.stable || piece.colorID !== undefined) {
       this.$emit("manualCollapse", column, row, piece);
     }
+  }
+
+  get winning() {
+    const counts = { red: 0, blue: 0, total: this.state.worlds.length };
+    this.state.worlds
+      .filter((world) => world.winner !== undefined)
+      .forEach((world) => counts[world.winner ? "red" : "blue"]++);
+
+    return counts;
   }
 
   get occupation() {

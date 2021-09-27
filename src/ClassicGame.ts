@@ -2,10 +2,13 @@ import { World, Piece } from "./GameState";
 
 /**
  * Inserts $piece into $world at column $column
- * Returns true if the world was mutated
- * Returns false iff the move is illegal
+ * Computes the new world winner, if not already won
+ *
+ * Returns true iff the world was mutated
+ * ~> returns false iff the move is illegal
  */
-export function insertPiece(height: number, world: World<Piece>, column: number, piece: Piece): boolean {
+export function insertPiece(height: number, width: number,
+    world: World<Piece>, column: number, piece: Piece): boolean {
     if (column in world.data) {
         let row = height
         while (row >= 1) {
@@ -13,6 +16,10 @@ export function insertPiece(height: number, world: World<Piece>, column: number,
                 row--
             } else {
                 world.data[column][row] = piece
+                if (world.winner === undefined) {
+                    world.winner = computeWinner(height, width, world)
+                }
+
                 return true
             }
         }
@@ -24,6 +31,10 @@ export function insertPiece(height: number, world: World<Piece>, column: number,
     // column is empty so far
     world.data[column] = {}
     world.data[column][height] = piece
+    if (world.winner === undefined) {
+        world.winner = computeWinner(height, width, world)
+    }
+
     return true
 }
 
@@ -32,7 +43,7 @@ export function computeWinner(height: number, width: number, world: World<Piece>
     // columns
     for (let column = 1; column <= width; column++) {
         const winner = checkWinnerDirection(height, width, world,
-            1, column, 0, 1);
+            1, column, 1, 0);
         if (winner !== undefined) {
             return winner;
         }
@@ -58,7 +69,7 @@ export function computeWinner(height: number, width: number, world: World<Piece>
     // rows
     for (let row = 1; row <= height; row++) {
         const winner = checkWinnerDirection(height, width, world,
-            row, 1, 1, 0);
+            row, 1, 0, 1);
         if (winner !== undefined) {
             return winner;
         }
@@ -76,12 +87,18 @@ function checkWinnerDirection(height: number, width: number,
     let player1 = undefined
 
     while (row <= height && column <= width) {
-        const nextPlayer1 = world.data[row]?.[column]?.player1
-        if (nextPlayer1 != player1) {
+        if (world.data[column]?.[row]?.colorID !== undefined) {
+            // ignore color pieces
             count = 0
-            player1 = nextPlayer1
-        } else if (++count >= WIN_LENGTH) {
-            return player1
+            player1 = undefined
+        } else {
+            const nextPlayer1 = world.data[column]?.[row]?.player1
+            if (nextPlayer1 !== player1) {
+                count = 1
+                player1 = nextPlayer1
+            } else if (++count >= WIN_LENGTH) {
+                return player1
+            }
         }
 
         // step into direction (rowD, columnD)

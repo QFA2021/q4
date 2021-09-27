@@ -51,7 +51,7 @@ import {
     return {
       state: emptyGame(7, 6),
       colorPiece: undefined,
-      copyright: names.join(", ") + " " + (new Date()).getFullYear(),
+      copyright: names.join(", ") + " " + new Date().getFullYear(),
     };
   },
   components: {
@@ -73,10 +73,16 @@ export default class App extends Vue {
     if (this.colorPiece === undefined) {
       // first color piece
       this.colorPiece = insertColorPiece(this.state, column);
+      if (this.colorPiece === undefined) { // illegal move
+        (this.$refs.modal as Alert).showModal = true;
+      }
     } else {
       // second color piece
-      insertSecondColorPiece(this.state, column, this.colorPiece);
-      this.colorPiece = undefined;
+      if (insertSecondColorPiece(this.state, column, this.colorPiece)) {
+        this.colorPiece = undefined;
+      } else {
+        (this.$refs.modal as Alert).showModal = true;
+      }
     }
   }
   placeSpace(...columns: number[]) {
