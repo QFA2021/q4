@@ -52,6 +52,7 @@ export function insertColorPiece(state: GameState, column: number): Piece {
 
 export function insertSecondColorPiece(state: GameState, column: number, piecePrimary: Piece) {
     // TODO: use the same id?
+    // TODO use deep copy function of stdlib?
     const piece: Piece = {
         id: piecePrimary.id,
         player1: piecePrimary.player1,
