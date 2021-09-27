@@ -52,7 +52,7 @@
                 piece.colorID !== highlight?.piece?.colorID),
             highlight:
               // non-color non-stable is highlighted ~> highlight pieces in resulting remaining worlds
-              highlightOccupancy[column]?.[row]?.has(piece),
+              !piece.stable && highlightOccupancy[column]?.[row]?.has(piece),
             highlightColor:
               // part of highlighted color superposition piece
               piece.colorPieceOther !== undefined &&
