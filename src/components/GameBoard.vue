@@ -34,6 +34,7 @@
             color: piece.colorID !== undefined,
           }"
           @click="collapse(column, row, piece)"
+          :title="'ID:'+piece.id + '\nPlayer: '+ piece.player1 + '\nstable: '+piece.stable + '\ncolorID: '+ piece.colorID + '\ncolorORef: '+ piece.colorPieceOther"
         >
           {{ piece.id }}
         </div>

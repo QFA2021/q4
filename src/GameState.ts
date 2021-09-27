@@ -4,7 +4,7 @@ export interface GameState {
     height: number,
     // internal/invisible state
     next_player: boolean, // true iff its the red player's turn
-    next_stone_id: number,
+    next_stone_id: number, // ID of next move to be done by a player
     next_color_id: number,
     // board state
     worlds: World<Piece>[],
@@ -19,8 +19,8 @@ export interface WorldRow<T> {
 }
 
 export interface Piece {
-    id: number,
-    player1: boolean, // true iff inserted by first player
+    id: number, // id of the move this piece was inserted
+    player1: boolean, // true iff inserted by red player
 
     // used by ui to mark pieces that are stable/already in the final position
     stable: boolean,
