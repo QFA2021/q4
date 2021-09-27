@@ -37,11 +37,40 @@
           :key="piece.id"
           :class="{
             small: !piece.stable,
-            player1: piece.player1,
-            color: piece.colorID !== undefined,
+            player1:
+              // no color superposition ~> use piece player
+              (piece.player1 && piece.colorID === undefined) ||
+              // color superposition and one of the options is hovered
+              (piece.colorID !== undefined &&
+                piece.colorID === highlight?.piece?.colorID &&
+                // then highlight hovered piece in next player color
+                !((piece === highlight.piece) ^ state.next_player)),
+            color:
+              piece.colorID !== undefined &&
+              piece.colorID !== highlight?.piece?.colorID,
+            highlight:
+              // non-color non-stable is highlighted ~> highlight pieces in resulting remaining worlds
+              highlightOccupation[column]?.[row]?.has(piece),
+            highlightColor:
+              // part of highlighted color superposition piece
+              piece.colorID !== undefined &&
+              piece.colorID === highlight?.piece?.colorID,
           }"
           @click="collapse(column, row, piece)"
-          :title="'ID:'+piece.id + '\nPlayer: '+ piece.player1 + '\nstable: '+piece.stable + '\ncolorID: '+ piece.colorID + '\ncolorORef: '+ piece.colorPieceOther"
+          @mouseover="highlight = { column: column, row: row, piece: piece }"
+          @mouseleave="highlight = undefined"
+          :title="
+            'ID:' +
+            piece.id +
+            '\nPlayer: ' +
+            piece.player1 +
+            '\nstable: ' +
+            piece.stable +
+            '\ncolorID: ' +
+            piece.colorID +
+            '\ncolorORef: ' +
+            piece.colorPieceOther
+          "
         >
           {{ piece.id }}
         </div>
@@ -52,7 +81,17 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { GameState, Piece, WorldStack } from "@/GameState";
+import { GameState, Piece } from "@/GameState";
+import {
+  computeWorldOccupation,
+  computeWorldOccupationFilter,
+} from "@/GameVisual";
+
+interface Highlight {
+  column: number;
+  row: number;
+  piece: Piece;
+}
 
 @Options({
   props: {
@@ -62,6 +101,7 @@ import { GameState, Piece, WorldStack } from "@/GameState";
   data() {
     return {
       preparedColumn: undefined,
+      highlight: undefined,
     };
   },
   emits: ["placeClassical", "placeSpace", "placeColor", "manualCollapse"],
@@ -70,6 +110,7 @@ export default class GameBoard extends Vue {
   state!: GameState;
   colorPiece!: Boolean;
   preparedColumn?: number;
+  highlight?: Highlight;
 
   prepare(column: number) {
     this.preparedColumn = column;
@@ -92,6 +133,7 @@ export default class GameBoard extends Vue {
     // ignore events, where the piece is already stable
     if (!piece.stable || piece.colorID !== undefined) {
       this.$emit("manualCollapse", column, row, piece);
+      this.highlight = undefined;
     }
   }
 
@@ -105,43 +147,21 @@ export default class GameBoard extends Vue {
   }
 
   get occupation() {
-    // for each cell collect the pieces that occur there
-    const res: WorldStack<WorldStack<Set<Piece>>> = {};
+    return computeWorldOccupation(this.state);
+  }
 
-    // detect if a piece occures at multiple positions accross worlds
-    const piecePos = new Map<Piece, { row: string; column: string }>();
-
-    for (const world of this.state.worlds) {
-      for (const column in world.data) {
-        if (!(column in res)) {
-          res[column] = {};
-        }
-
-        for (const row in world.data[column]) {
-          if (!(row in res[column])) {
-            res[column][row] = new Set();
-          }
-
-          // piece has occured at (column, row)
-          const piece = world.data[column][row];
-          res[column][row].add(piece);
-
-          // check if piece occured at a different position
-          // TODO: this (view update) code mutates the (global) state
-          const pos = piecePos.get(piece);
-          if (pos === undefined) {
-            // piece has not been seen yet
-            piecePos.set(piece, { row: row, column: column });
-            piece.stable = true;
-          } else if (pos.row != row || pos.column != column) {
-            // piece detected at different position
-            piece.stable = false;
-          }
-        }
-      }
-    }
-
-    return res;
+  get highlightOccupation() {
+    // no highlight occupation for color superposition or stable pieces
+    return this.highlight === undefined ||
+      this.highlight.piece.stable ||
+      this.highlight.piece.colorID !== undefined
+      ? {}
+      : computeWorldOccupationFilter(
+          this.state,
+          this.highlight.column,
+          this.highlight.row,
+          this.highlight.piece
+        );
   }
 }
 </script>
@@ -190,6 +210,13 @@ td div.small {
 }
 td div.player1 {
   border-color: red;
+}
+
+td div.highlight {
+  background-color: yellow !important;
+}
+td div.highlightColor {
+  background-color: greenyellow;
 }
 
 td div.color {
