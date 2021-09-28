@@ -25,39 +25,44 @@
         :set="(col = state.occupancyCache[column]?.[row])"
         :class="{ empty: col === undefined }"
       >
-        <div
-          v-for="piece in col"
-          :key="piece.id"
-          :class="{
-            small: !piece.stable,
-            player1:
-              // no color superposition ~> use piece player
-              (piece.player1 && piece.colorPieceOther === undefined) ||
-              // color superposition and one of the options is hovered
-              (piece.colorPieceOther !== undefined &&
-                piece.colorID === highlight?.piece?.colorID &&
-                // then highlight hovered piece in next player color
-                !((piece === highlight.piece) ^ state.next_player)),
-            color:
-              piece.colorID !== undefined &&
-              // no highlighting when 2nd piece missing (i.e. when colorPieceOther = undefined)
-              (piece.colorPieceOther === undefined ||
-                piece.colorID !== highlight?.piece?.colorID),
-            highlight:
-              // non-color non-stable is highlighted ~> highlight pieces in resulting remaining worlds
-              !piece.stable && highlightOccupancy[column]?.[row]?.has(piece),
-            highlightColor:
-              // part of highlighted color superposition piece
-              piece.colorPieceOther !== undefined &&
-              piece.colorID === highlight?.piece?.colorID,
-          }"
-          @click="collapse(column, row, piece)"
-          @mouseover="highlight = { column: column, row: row, piece: piece }"
-          @mouseleave="highlight = undefined"
-          :title="getPieceActionHint(piece) + getActionPieceDebug(piece)"
-        >
-          {{ piece.id }}
-        </div>
+        <template v-for="piece in col" :key="piece.id">
+          <transition name="slide" appear>
+            <div
+              :class="{
+                small: !piece.stable,
+                player1:
+                  // no color superposition ~> use piece player
+                  (piece.player1 && piece.colorPieceOther === undefined) ||
+                  // color superposition and one of the options is hovered
+                  (piece.colorPieceOther !== undefined &&
+                    piece.colorID === highlight?.piece?.colorID &&
+                    // then highlight hovered piece in next player color
+                    !((piece === highlight.piece) ^ state.next_player)),
+                color:
+                  piece.colorID !== undefined &&
+                  // no highlighting when 2nd piece missing (i.e. when colorPieceOther = undefined)
+                  (piece.colorPieceOther === undefined ||
+                    piece.colorID !== highlight?.piece?.colorID),
+                highlight:
+                  // non-color non-stable is highlighted ~> highlight pieces in resulting remaining worlds
+                  !piece.stable &&
+                  highlightOccupancy[column]?.[row]?.has(piece),
+                highlightColor:
+                  // part of highlighted color superposition piece
+                  piece.colorPieceOther !== undefined &&
+                  piece.colorID === highlight?.piece?.colorID,
+              }"
+              @click="collapse(column, row, piece)"
+              @mouseover="
+                highlight = { column: column, row: row, piece: piece }
+              "
+              @mouseleave="highlight = undefined"
+              :title="getPieceActionHint(piece) + getActionPieceDebug(piece)"
+            >
+              {{ piece.id }}
+            </div>
+          </transition>
+        </template>
       </td>
     </tr>
   </table>
@@ -197,6 +202,7 @@ td div {
   width: 90px;
   height: 90px;
 
+  transition: background-color .1s ease, color .1s ease;
   font-size: 51px;
   font-weight: bold;
 }
@@ -223,8 +229,7 @@ td div.highlightColor {
 td div.color {
   position: relative;
   border-color: transparent;
-  background: white;
-  background-clip: padding-box;
+  color: white;
 }
 td div.color:before {
   content: "";
@@ -249,5 +254,13 @@ td div.color.small:before {
   100% {
     transform: rotate(360deg);
   }
+}
+
+td div.slide-enter-active {
+  transition: opacity .3s ease-out, transform .3s ease-out, background-color .3s ease;
+}
+td div.slide-enter-from {
+  transform: translateY(-50px);
+  opacity: 0;
 }
 </style>
