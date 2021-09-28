@@ -219,7 +219,10 @@ td div.player1 {
 }
 
 td div.highlight {
-  background-color: yellow !important;
+  background-color: yellow;
+}
+td div.highlight.color {
+  color: yellow;
 }
 td div.highlightColor {
   background-color: greenyellow;
@@ -229,6 +232,7 @@ td div.highlightColor {
 td div.color {
   position: relative;
   border-color: transparent;
+  background: none;
   color: white;
 }
 td div.color:before {
