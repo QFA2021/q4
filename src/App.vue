@@ -7,10 +7,17 @@
   <footer>
     <p>&copy; {{ copyright }}</p>
   </footer>
+
+  <Alert title="New Version Available" ref="offer">
+    <p>There is a new version available. Do you want to restart?</p>
+    <button @click="reloadNow()">Reload with new version</button>
+    <button @click="$refs.offer.showModal = false">Continue</button>
+  </Alert>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
+import Alert from "@/components/Alert.vue";
 import Game from "@/components/Game.vue";
 import Menu from "@/components/Menu.vue";
 import { emptyGame, GameRules, GameState } from "./GameState";
@@ -24,6 +31,7 @@ import { emptyGame, GameRules, GameState } from "./GameState";
     };
   },
   components: {
+    Alert,
     Game,
     Menu,
   },
@@ -45,6 +53,14 @@ export default class App extends Vue {
     this.state = emptyGame(rules);
   }
 
+  offerReload() {
+    (this.$refs.offer as Alert).showModal = true;
+  }
+
+  reloadNow() {
+    location.reload();
+  }
+
   mounted() {
     // update copyright every 10s
     this.randomCopyright();
@@ -63,7 +79,9 @@ export default class App extends Vue {
     this.copyright = names.join(", ") + " " + new Date().getFullYear();
 
     // update copyright every 10s while tab is active
-    requestAnimationFrame(() => setTimeout(this.randomCopyright.bind(this), 10000));
+    requestAnimationFrame(() =>
+      setTimeout(this.randomCopyright.bind(this), 10000)
+    );
   }
 }
 </script>

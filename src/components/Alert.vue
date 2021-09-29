@@ -10,15 +10,17 @@
           <span>{{ title }}</span>
           <button aria-label="Close" @click="showModal = false">×</button>
         </h2>
-        <slot>
-          <img
-            src="@/assets/Title.svg"
-            height="111"
-            width="320"
-            alt="q4 Logo"
-          />
-        </slot>
-        <p v-if="message">{{ message }}</p>
+        <div class="content">
+          <slot>
+            <img
+              src="@/assets/Title.svg"
+              height="111"
+              width="320"
+              alt="q4 Logo"
+            />
+          </slot>
+          <p v-if="message">{{ message }}</p>
+        </div>
       </div>
     </div>
   </transition>
@@ -103,14 +105,14 @@ export default class Alert extends Vue {
 }
 
 .wrapper {
+  max-height: calc(100vh - 20px);
   width: 450px;
+  min-width: 450px;
   background: white;
   border-radius: 5px;
   margin: 10px auto 0;
+  padding-bottom: 20px;
   cursor: default;
-
-  max-height: calc(100vh - 20px);
-  overflow-y: auto;
 
   will-change: transform;
   transition: transform 0.3s ease-out;
@@ -128,7 +130,7 @@ export default class Alert extends Vue {
 h2 {
   display: flex;
   border-bottom: 1px solid gray;
-  padding: 20px 50px 10px;
+  padding: 20px 20px 10px;
   margin-top: 0;
   font-size: 2rem;
 }
@@ -144,11 +146,27 @@ button {
 }
 
 p {
-  padding: 20px 50px 20px;
+  padding: 20px 50px 0;
   font-size: 1rem;
 }
 video + p {
   margin-top: 0;
+}
+
+.content >>> button {
+  margin: 0 5px;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+
+  cursor: pointer;
+  background-color: hsl(291deg 29% 76% / 50%);
+  box-shadow: 0 2px 2px rgb(0 0 0 / 20%);
+  transition: box-shadow 0.1s ease;
+}
+.content >>> button:hover {
+  box-shadow: 1px 3px 2px rgb(0 0 0 / 40%);
 }
 
 img {
