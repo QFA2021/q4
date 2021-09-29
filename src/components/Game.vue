@@ -32,6 +32,9 @@
       preload
       width="320"
       height="431"
+      ref="video"
+      @click="$refs.video.play()"
+      style="cursor: pointer"
     ></video>
   </Alert>
   <Alert
