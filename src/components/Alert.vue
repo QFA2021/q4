@@ -153,7 +153,7 @@ video + p {
   margin-top: 0;
 }
 
-.content >>> button {
+.content :deep(button) {
   margin: 0 5px;
   padding: 10px;
   border: none;
@@ -165,7 +165,7 @@ video + p {
   box-shadow: 0 2px 2px rgb(0 0 0 / 20%);
   transition: box-shadow 0.1s ease;
 }
-.content >>> button:hover {
+.content :deep(button:hover) {
   box-shadow: 1px 3px 2px rgb(0 0 0 / 40%);
 }
 
