@@ -1,5 +1,8 @@
 <template>
-  <Game />
+  <main>
+    <Menu />
+    <Game v-if="false" />
+  </main>
 
   <footer>
     <p>&copy; {{ copyright }}</p>
@@ -9,6 +12,7 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import Game from "@/components/Game.vue";
+import Menu from "@/components/Menu.vue";
 
 @Options({
   data() {
@@ -27,6 +31,7 @@ import Game from "@/components/Game.vue";
   },
   components: {
     Game,
+    Menu,
   },
 })
 export default class App extends Vue {
@@ -46,6 +51,10 @@ body {
   text-align: center;
   color: #2c3e50;
 }
+main {
+  min-height: 80vh;
+}
+
 
 tr.controls {
   position: sticky;

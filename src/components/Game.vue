@@ -1,5 +1,5 @@
 <template>
-    <h1>
+  <h1>
     <img src="@/assets/Title.svg" height="50" width="144" alt="q4 Logo" />
     <span :class="{ player1: state.next_player }"
       >Next player: {{ getCurrentPlayerColor(state.next_player) }}</span
