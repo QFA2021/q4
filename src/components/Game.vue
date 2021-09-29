@@ -20,6 +20,13 @@
     @placeColor="placeColor"
     @manualCollapse="manualCollapse"
   />
+  <p
+    v-if="state.collapsesBeforeMove < Infinity"
+    :class="{ outOfMoves: state.playerAllowedCollapses === 0 }"
+  >
+    You have performed {{ state.playerAllowedCollapses }} out of
+    {{ state.collapsesBeforeMove }} allowed collapses before your move.
+  </p>
 
   <Alert
     title="Illegal move!"
@@ -181,5 +188,10 @@ h1 button:hover {
 
 h1 img {
   cursor: pointer;
+}
+
+p.outOfMoves {
+  color: red;
+  font-weight: bold;
 }
 </style>
