@@ -1,6 +1,11 @@
 <template>
-  <table :class="{ mayCollapse: state.playerAllowedCollapses >= 1 }">
-    <tr class="controls" :class="{ player1: state.next_player }">
+  <table
+    :class="{
+      mayCollapse: state.playerAllowedCollapses >= 1,
+      player1: state.next_player,
+    }"
+  >
+    <tr class="controls">
       <th v-for="column in state.width" :key="column">
         <button @click="placeColor(column)" class="color">Color</button>
         <template v-if="!colorPiece">
@@ -32,7 +37,7 @@
         v-for="column in state.width"
         :key="column"
         :set="(col = state.occupancyCache[column]?.[row])"
-        :class="{ empty_player2: col === undefined, empty_player1: col === undefined && state.next_player }"
+        :class="{ empty: col === undefined }"
       >
         <template v-for="piece in col" :key="piece.id">
           <transition name="slide" appear>
@@ -231,30 +236,30 @@ th button:hover {
 th button.color {
   background: linear-gradient(90deg, red, blue);
 }
-.controls.player1 th button.color {
+.player1 .controls th button.color {
   background: linear-gradient(90deg, blue, red);
 }
 th button.classic {
   background: blue;
 }
-.controls.player1 th button.classic {
+.player1 .controls th button.classic {
   background: red;
 }
 th button.space {
   background: linear-gradient(90deg, blue, rgba(0, 0, 0, 0.7), blue);
 }
-.controls.player1 th button.space {
+.player1 .controls th button.space {
   background: linear-gradient(90deg, red, rgba(0, 0, 0, 0.7), red);
 }
 th button.reset {
   background: black;
 }
 
-td.empty_player2 {
+td.empty {
+  transition: background-color 0.1s ease;
   background-color: rgba(0, 135, 255, 0.11);
 }
-
-td.empty_player1 {
+.player1 td.empty {
   background-color: rgba(255, 0, 0, 0.11);
 }
 
