@@ -237,10 +237,10 @@ th button.classic {
   background: red;
 }
 th button.space {
-  background: linear-gradient(90deg, blue, rgba(0, 0, 0, 0.3), blue);
+  background: linear-gradient(90deg, blue, rgba(0, 0, 0, 0.7), blue);
 }
 .controls.player1 th button.space {
-  background: linear-gradient(90deg, red, rgba(0, 0, 0, 0.3), red);
+  background: linear-gradient(90deg, red, rgba(0, 0, 0, 0.7), red);
 }
 th button.reset {
   background: black;
