@@ -1,5 +1,9 @@
 <template>
-  <transition name="modal">
+  <transition
+    name="modal"
+    @after-enter="afterFadeIn"
+    @before-leave="beforeFadeOut"
+  >
     <div class="container" v-if="showModal" @click="clickBackground">
       <div class="wrapper">
         <h2>
@@ -32,6 +36,7 @@ import { Options, Vue } from "vue-class-component";
   data() {
     return {
       showModal: this.shouldOpen,
+      showDone: false,
     };
   },
   watch: {
@@ -39,26 +44,32 @@ import { Options, Vue } from "vue-class-component";
       this.showModal = this.shouldOpen;
     },
   },
-  mounted() {
-    this._el = document.addEventListener("keyup", (event) => {
-      if (event.key === "Escape") {
-        this.showModal = false;
-      }
-    });
-  },
-  unmounted() {
-    document.removeEventListener("keyup", this._el);
-  },
 })
 export default class Alert extends Vue {
   title!: String;
   message!: String;
   showModal!: boolean;
+  showDone!: Boolean;
+  private keyboardEL: any;
 
   clickBackground(event: PointerEvent) {
-    if (event.target === event.currentTarget) {
+    if (this.showDone && event.target === event.currentTarget) {
       this.showModal = false;
     }
+  }
+
+  afterFadeIn() {
+    this.showDone = true;
+    this.keyboardEL = document.addEventListener("keyup", (event) => {
+      if (event.key === "Escape") {
+        this.showModal = false;
+      }
+    });
+  }
+  beforeFadeOut() {
+    this.showDone = false;
+    document.removeEventListener("keyup", this.keyboardEL);
+    this.keyboardEL = undefined;
   }
 }
 </script>
