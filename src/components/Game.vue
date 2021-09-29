@@ -1,6 +1,12 @@
 <template>
   <h1>
-    <img src="@/assets/Title.svg" height="50" width="144" alt="q4 Logo" @click="$emit('toMenu')" />
+    <img
+      src="@/assets/Title.svg"
+      height="50"
+      width="144"
+      alt="q4 Logo"
+      @click="$emit('toMenu')"
+    />
     <span :class="{ player1: state.next_player }"
       >Next player: {{ getCurrentPlayerColor(state.next_player) }}</span
     >
@@ -22,10 +28,10 @@
     title="Game Over!"
     :message="
       'Player ' +
-      getCurrentPlayerColor(totalWinner1) +
+      getCurrentPlayerColor(state.winner?.player1) +
       ' has won in all possible states of the game!'
     "
-    ref="modalWin"
+    v-if="state.winner !== undefined"
   />
 </template>
 
@@ -96,22 +102,6 @@ export default class Game extends Vue {
     collapsePiece(this.state, column, row, piece);
   }
 
-  get totalWinner1() {
-    const winners = new Set(this.state.worlds.map((world) => world.winner));
-    if (winners.size !== 1) {
-      return undefined;
-    }
-
-    const winner1 = winners.values().next().value;
-    if (winner1 !== undefined && !this.gameWonShowed) {
-      // todo: move this out of getter
-      this.gameWonShowed = true;
-      (this.$refs.modalWin as Alert).showModal = true;
-    }
-
-    return winner1;
-  }
-
   getCurrentPlayerColor(player: boolean) {
     return playerToColor(player);
   }
@@ -142,6 +132,6 @@ h1 span.player1 {
 }
 
 h1 img {
-    cursor: pointer;
+  cursor: pointer;
 }
 </style>

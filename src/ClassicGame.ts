@@ -1,4 +1,4 @@
-import { World, Piece } from "./GameState";
+import { World, Piece, Winner } from "./GameState";
 
 /**
  * Inserts $piece into $world at column $column
@@ -73,24 +73,38 @@ export function computeWinner(height: number, width: number, world: World<Piece>
  */
 function checkWinnerDirection(height: number, width: number,
     world: World<Piece>, row: number, column: number,
-    rowD: number, columnD: number, onlyStable: boolean = true): boolean | undefined {
+    rowD: number, columnD: number, onlyStable: boolean = true): Winner | undefined {
     let count = 0
     let player1 = undefined
 
     while (row <= height && column <= width) {
-        const cell = world.data[column]?.[row]
-        if (cell === undefined || cell.colorID !== undefined || (onlyStable && !cell.stable)) {
+        const piece = world.data[column]?.[row]
+        if (piece === undefined || piece.colorID !== undefined || (onlyStable && !piece.stable)) {
             // always ignore color pieces
             // only use stable cells if specified
             count = 0
             player1 = undefined
         } else {
-            const nextPlayer1 = cell?.player1
+            const nextPlayer1 = piece?.player1
             if (nextPlayer1 !== player1) {
                 count = 1
                 player1 = nextPlayer1
             } else if (++count >= WIN_LENGTH) {
-                return player1
+                // game is won
+                const winner: Winner = {
+                    player1: player1,
+                    pieces: new Set()
+                }
+
+                // collect the winning pieces
+                winner.pieces.add(piece)
+                for (let i = 1; i < WIN_LENGTH; i++) {
+                    row -= rowD
+                    column -= columnD
+                    winner.pieces.add(world.data[column]?.[row])
+                }
+
+                return winner
             }
         }
 

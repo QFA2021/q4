@@ -17,6 +17,7 @@ export interface GameState extends GameRules {
 
     // board state
     worlds: World<Piece>[],
+    winner?: Winner,
 
     // cache for board occupancy
     // for each cell we store the set of pieces that occur there in *any* world
@@ -27,7 +28,7 @@ export interface World<T> {
     data: WorldStack<WorldStack<T>>,
 
     // undefined ~> no winner yet
-    winner?: Boolean,
+    winner?: Winner,
 }
 
 export interface WorldStack<T> {
@@ -45,6 +46,12 @@ export interface Piece {
     colorID?: number,
     colorPieceOther?: Piece, // reference to the other piece
 }
+
+export interface Winner {
+    player1: boolean, // true iff player1 has won
+    pieces: Set<Piece>,
+}
+
 
 export function emptyGame(rules: GameRules): GameState {
     return {

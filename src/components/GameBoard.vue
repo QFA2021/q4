@@ -60,6 +60,7 @@
                   // part of highlighted color superposition piece
                   piece.colorPieceOther !== undefined &&
                   piece.colorID === highlight?.piece?.colorID,
+                winning: state.winner?.pieces?.has(piece),
               }"
               @click="collapse(column, row, piece)"
               @mouseover="
@@ -272,8 +273,13 @@ td div.small {
 td div.player1 {
   border-color: red;
 }
-.mayCollapse td div.small, .mayCollapse td div.highlightColor {
+.mayCollapse td div.small,
+.mayCollapse td div.highlightColor {
   cursor: pointer;
+}
+
+td div.winning {
+  box-shadow: 0px 0px 10px 5px rgb(255 255 0);
 }
 
 td div.highlight {

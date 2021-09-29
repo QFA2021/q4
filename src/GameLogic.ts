@@ -54,9 +54,27 @@ function stepGame(state: GameState, collapsed: boolean = false) {
     state.occupancyCache = computeWorldOccupation(state)
 
     // winner calculation
-    for (const world of state.worlds) {
-        if (world.winner === undefined) {
-            world.winner = computeWinner(state.height, state.width, world)
+    if (state.winner === undefined) {
+        // compute winner in all worlds and collect winning pieces
+        const winPlayers = new Set<boolean>();
+        const winPieces = new Set<Piece>()
+        for (const world of state.worlds) {
+            if (world.winner === undefined) {
+                world.winner = computeWinner(state.height, state.width, world)
+            }
+
+            if (world.winner !== undefined) {
+                winPlayers.add(world.winner.player1);
+                world.winner.pieces.forEach(piece => winPieces.add(piece));
+            }
+        }
+
+        // worlds won by a single player
+        if (winPlayers.size === 1) {
+            state.winner = {
+                player1: winPlayers.values().next().value,
+                pieces: winPieces
+            }
         }
     }
 
@@ -168,13 +186,6 @@ export function collapsePiece(state: GameState, column: number, row: number, pie
         pieceOther.colorPieceOther = undefined;
         pieceOther.id++;
         pieceOther.player1 = !state.next_player;
-
-        // compute winners
-        for (const world of state.worlds) {
-            if (world.winner === undefined) {
-                world.winner = computeWinner(state.height, state.width, world)
-            }
-        }
     }
 
     // update occupancy cache and piece stability
