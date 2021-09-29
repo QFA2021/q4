@@ -110,9 +110,10 @@ export default class Alert extends Vue {
   max-width: 100%;
   background: white;
   border-radius: 5px;
-  margin: 10px auto 0;
+  margin: 10px auto;
   padding-bottom: 20px;
   cursor: default;
+  overflow-y: auto;
 
   will-change: transform;
   transition: transform 0.3s ease-out;
@@ -146,13 +147,14 @@ button {
 }
 
 p {
-  padding: 20px 50px 0;
+  margin: 0;
+  padding: 20px 0 0;
   font-size: 1rem;
 }
-video + p {
-  margin-top: 0;
-}
 
+.content {
+  padding: 0 20px;
+}
 .content :deep(button) {
   margin: 0 5px;
   padding: 10px;
