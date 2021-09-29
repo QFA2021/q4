@@ -13,19 +13,19 @@
   <table>
     <tr>
       <td>
-        <button @click="startGame(false, 1)">
-          <h3>Single Collapse</h3>
-          <span
-            >You may perform a single collapse before making your move.</span
-          >
+        <button @click="startGame(true, Infinity)">
+          <h3>Collapse as Move</h3>
+          <span>Collapsing a piece or color is your move!</span>
         </button>
       </td>
     </tr>
     <tr>
       <td>
-        <button @click="startGame(true, Infinity)">
-          <h3>Collapse as Move</h3>
-          <span>Collapsing a piece or color is your move!</span>
+        <button @click="startGame(false, 1)">
+          <h3>Single Collapse</h3>
+          <span
+            >You may perform a single collapse before making your move.</span
+          >
         </button>
       </td>
     </tr>
