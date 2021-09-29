@@ -10,5 +10,8 @@ module.exports = {
     msTileColor: '#000000',
     appleMobileWebAppCapable: 'yes',
     appleMobileWebAppStatusBarStyle: 'black',
+    iconPaths: {
+        maskIcon: 'favicon.svg', // would be img/icons/safari-pinned-tab.svg by default
+    }
   }
 };
