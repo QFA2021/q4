@@ -26,7 +26,7 @@ import { emptyGame, GameRules, GameState } from "./GameState";
   data() {
     return {
       inMenu: true,
-      state: {},
+      state: undefined,
       copyright: "",
     };
   },
@@ -39,7 +39,7 @@ import { emptyGame, GameRules, GameState } from "./GameState";
 export default class App extends Vue {
   private copyright!: string;
   private inMenu!: boolean;
-  private state!: GameState;
+  private state?: GameState;
 
   startGame(rules: GameRules) {
     this.inMenu = false;
