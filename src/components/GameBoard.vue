@@ -1,20 +1,29 @@
 <template>
   <table>
-    <tr class="controls">
+    <tr class="controls" :class="{ player1: state.next_player }">
       <th v-for="column in state.width" :key="column">
-        <button @click="placeColor(column)">Color</button>
+        <button @click="placeColor(column)" class="color">Color</button>
         <template v-if="!colorPiece">
-          <button @click="placeClassical(column)">Classic</button>
-          <button @click="prepare(column)" v-if="preparedColumn === undefined">
-            Quantum
+          <button @click="placeClassical(column)" class="classic">
+            Classic
+          </button>
+          <button
+            @click="prepare(column)"
+            v-if="preparedColumn === undefined"
+            class="space"
+          >
+            Space 1st
           </button>
           <button
             @click="placeSpace(column)"
             v-else-if="preparedColumn != column"
+            class="space"
           >
-            Space
+            Space 2nd
           </button>
-          <button @click="preparedColumn = undefined" v-else>Reset</button>
+          <button @click="preparedColumn = undefined" v-else class="reset">
+            Reset
+          </button>
         </template>
       </th>
     </tr>
@@ -186,7 +195,45 @@ th {
 }
 
 th {
-  height: 50px;
+  height: 77px;
+  vertical-align: baseline;
+}
+th button {
+  width: 80%;
+  margin: 2px auto 0;
+  border: none;
+  border-radius: 7px;
+  height: 22px;
+  cursor: pointer;
+
+  color: white;
+  font-weight: bold;
+  transition: color 0.1s ease, background-color 0.3s ease;
+}
+th button:hover {
+  color: yellow;
+}
+
+th button.color {
+  background: linear-gradient(90deg, red, blue);
+}
+.controls.player1 th button.color {
+  background: linear-gradient(90deg, blue, red);
+}
+th button.classic {
+  background: blue;
+}
+.controls.player1 th button.classic {
+  background: red;
+}
+th button.space {
+  background: linear-gradient(90deg, blue, rgba(0, 0, 0, 0.3), blue);
+}
+.controls.player1 th button.space {
+  background: linear-gradient(90deg, red, rgba(0, 0, 0, 0.3), red);
+}
+th button.reset {
+  background: black;
 }
 
 td.empty {
@@ -202,7 +249,7 @@ td div {
   width: 90px;
   height: 90px;
 
-  transition: background-color .1s ease, color .1s ease;
+  transition: background-color 0.1s ease, color 0.1s ease;
   font-size: 51px;
   font-weight: bold;
 }
@@ -261,7 +308,8 @@ td div.color.small:before {
 }
 
 td div.slide-enter-active {
-  transition: opacity .3s ease-out, transform .3s ease-out, background-color .3s ease;
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out,
+    background-color 0.3s ease;
 }
 td div.slide-enter-from {
   transform: translateY(-50px);
