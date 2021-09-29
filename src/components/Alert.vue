@@ -12,7 +12,6 @@
             height="111"
             width="320"
             alt="q4 Logo"
-            v-if="false"
           />
         </slot>
         <p>{{ message }}</p>
@@ -32,7 +31,7 @@ import { Options, Vue } from "vue-class-component";
   },
   data() {
     return {
-      showModal: false,
+      showModal: this.shouldOpen,
     };
   },
   watch: {
