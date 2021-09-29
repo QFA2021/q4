@@ -35,13 +35,6 @@ import { emptyGame, GameRules, GameState } from "./GameState";
     Game,
     Menu,
   },
-  watch: {
-    inMenu() {
-      if (process.env.NODE_ENV === "production" && !this.inMenu) {
-        document.body.parentElement?.requestFullscreen();
-      }
-    },
-  },
 })
 export default class App extends Vue {
   private copyright!: string;
