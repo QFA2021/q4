@@ -107,7 +107,7 @@ export default class Alert extends Vue {
 .wrapper {
   max-height: calc(100vh - 20px);
   width: 450px;
-  min-width: 450px;
+  max-width: 100%;
   background: white;
   border-radius: 5px;
   margin: 10px auto 0;
