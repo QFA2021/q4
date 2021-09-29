@@ -84,6 +84,7 @@ export default class Alert extends Vue {
   left: 0;
   width: 100%;
   height: 100%;
+  overflow-x: scroll;
 
   display: flex;
   flex-direction: column;
@@ -118,6 +119,12 @@ export default class Alert extends Vue {
   will-change: transform;
   transition: transform 0.3s ease-out;
 }
+@media screen and (max-width: 450px) {
+  .wrapper {
+    margin: 0 auto;
+  }
+}
+
 .modal-enter-from .wrapper {
   transform: translateY(-200px);
 }
