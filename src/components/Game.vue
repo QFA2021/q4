@@ -142,6 +142,7 @@ h1 {
   z-index: 10;
 
   height: 50px;
+  min-width: 500px;
   margin: 10px 0;
 
   background: white;

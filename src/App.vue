@@ -92,6 +92,7 @@ body {
 }
 
 #app {
+  display: grid;
   font-family: Roboto, Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -100,6 +101,7 @@ body {
 }
 main {
   min-height: 80vh;
+  display: grid;
 }
 
 tr.controls {
