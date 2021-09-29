@@ -208,10 +208,12 @@ th button {
 
   color: white;
   font-weight: bold;
-  transition: color 0.1s ease, background-color 0.3s ease;
+  transition: transform .1s, ease, background-color 0.3s ease;
+  box-shadow: 0px 2px 2px rgb(0 0 0 / 20%);
 }
 th button:hover {
-  color: yellow;
+  transform: translateY(-1px);
+  box-shadow: 0px 3px 2px rgb(0 0 0 / 20%);
 }
 
 th button.color {
