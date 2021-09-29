@@ -84,7 +84,7 @@ export default class Alert extends Vue {
   left: 0;
   width: 100%;
   height: 100%;
-  overflow-x: scroll;
+  overflow-x: auto;
 
   display: flex;
   flex-direction: column;
