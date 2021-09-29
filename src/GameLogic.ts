@@ -49,7 +49,7 @@ function internalPieceInsert(state: GameState, column: number, piece: Piece) {
  * Steps the game forward
  * This needs to be called after every change to the worlds!
  */
-function stepGame(state: GameState) {
+function stepGame(state: GameState, collapsed: boolean = false) {
     // update occupancy and piece stability
     state.occupancyCache = computeWorldOccupation(state)
 
@@ -58,6 +58,16 @@ function stepGame(state: GameState) {
         if (world.winner === undefined) {
             world.winner = computeWinner(state.height, state.width, world)
         }
+    }
+
+    // apply game rules
+    if (collapsed) {
+        state.playerAllowedCollapses--
+        if (state.collapsingIsMove) {
+            state.next_player = !state.next_player
+        }
+    } else { // performed a move
+        state.playerAllowedCollapses = state.collapsesBeforeMove
     }
 }
 
@@ -116,9 +126,7 @@ export function insertSpacePiece(state: GameState, columns: number[]): boolean {
     state.worlds = newWorlds
     state.next_stone_id++
     state.next_player = !state.next_player
-
-    // update occupancy cache and piece stability
-    state.occupancyCache = computeWorldOccupation(state)
+    stepGame(state)
     return true
 }
 
@@ -170,7 +178,5 @@ export function collapsePiece(state: GameState, column: number, row: number, pie
     }
 
     // update occupancy cache and piece stability
-    stepGame(state)
-
-    // TODO: is it the other players turn now?
+    stepGame(state, true)
 }

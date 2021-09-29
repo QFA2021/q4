@@ -9,7 +9,7 @@
   <table>
     <tr>
       <td>
-        <button>
+        <button @click="startGame(false, 1)">
           <h3>Single Collapse</h3>
           <span
             >You may perform a single collapse before making your move.</span
@@ -19,7 +19,7 @@
     </tr>
     <tr>
       <td>
-        <button>
+        <button @click="startGame(true, Infinity)">
           <h3>Collapse as Move</h3>
           <span>Collapsing a piece or color is your move!</span>
         </button>
@@ -27,7 +27,7 @@
     </tr>
     <tr>
       <td>
-        <button>
+        <button @click="startGame(false, Infinity)">
           <h3>All Quantum</h3>
           <span>Allows all quantum moves and arbitrarily many collapses.</span>
         </button>
@@ -40,11 +40,18 @@
 import { Options, Vue } from "vue-class-component";
 
 @Options({
-  data() {
-    return {};
-  },
+  emits: ["startGame"],
 })
-export default class Menu extends Vue {}
+export default class Menu extends Vue {
+  startGame(collapsingIsMove: boolean, collapsesBeforeMove: number) {
+    this.$emit("startGame", {
+      width: 7,
+      height: 6,
+      collapsingIsMove: collapsingIsMove,
+      collapsesBeforeMove: collapsesBeforeMove,
+    });
+  }
+}
 </script>
 
 <style scoped>
@@ -67,11 +74,12 @@ table button {
   width: 100%;
   margin: 5px auto;
   padding: 10px 20px;
+  border: none;
   border-radius: 5px;
 
   font-size: 20px;
   cursor: pointer;
-  background-color: darkorange;
+  background-color: hsl(291deg 29% 76% / 50%);
   box-shadow: 0 3px 5px rgb(0 0 0 / 20%);
   transition: box-shadow 0.1s ease;
 }

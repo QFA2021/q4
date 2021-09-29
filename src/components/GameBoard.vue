@@ -1,5 +1,5 @@
 <template>
-  <table>
+  <table :class="{ mayCollapse: state.playerAllowedCollapses >= 1 }">
     <tr class="controls" :class="{ player1: state.next_player }">
       <th v-for="column in state.width" :key="column">
         <button @click="placeColor(column)" class="color">Color</button>
@@ -113,18 +113,19 @@ export default class GameBoard extends Vue {
   getPieceActionHint(p: Piece): string {
     if (isSuperposColorPiece(p)) {
       if (isFullySetSuperposColorPiece(p)) {
-        return (
-          "Click this to collapse it to " +
-          playerToColor(this.state.next_player)
-        );
+        return this.state.playerAllowedCollapses >= 1
+          ? "Click this to collapse it to " +
+              playerToColor(this.state.next_player)
+          : "You have no collapses left before your move.";
       } else {
         return "You need to choose a position for the other piece first";
       }
+    } else if (!p.stable) {
+      return this.state.playerAllowedCollapses >= 1
+        ? "Click to collapse here"
+        : "You have no collapses left before your move.";
     }
-    // TODO not ideal but works
-    if (!p.stable) {
-      return "Click to collapse here";
-    }
+
     return "";
   }
 
@@ -136,7 +137,8 @@ ID: ${piece.id}
 player: ${piece.player1} ${playerToColor(piece.player1)}
 stable: ${piece.stable}
 colorID: ${piece.colorID}
-colorORef: ${piece.colorPieceOther}`;
+colorORef: ${piece.colorPieceOther}
+allowedCollapses: ${this.state.playerAllowedCollapses}`;
   }
 
   prepare(column: number) {
@@ -156,6 +158,11 @@ colorORef: ${piece.colorPieceOther}`;
   }
 
   collapse(column: number, row: number, piece: Piece) {
+    // reject
+    if (this.state.playerAllowedCollapses < 1) {
+      return;
+    }
+
     // only keep worlds where piece is in (column, row)
     // ignore events, where the piece is already stable
     if (!piece.stable || piece.colorPieceOther !== undefined) {
@@ -208,7 +215,7 @@ th button {
 
   color: white;
   font-weight: bold;
-  transition: transform .1s, ease, background-color 0.3s ease;
+  transition: transform 0.1s, ease, background-color 0.3s ease;
   box-shadow: 0px 2px 2px rgb(0 0 0 / 20%);
 }
 th button:hover {
@@ -261,10 +268,12 @@ td div.small {
   height: 45px;
   margin: 2px;
   font-size: 25px;
-  cursor: pointer;
 }
 td div.player1 {
   border-color: red;
+}
+.mayCollapse td div.small, .mayCollapse td div.highlightColor {
+  cursor: pointer;
 }
 
 td div.highlight {
@@ -275,7 +284,6 @@ td div.highlight.color {
 }
 td div.highlightColor {
   background-color: greenyellow;
-  cursor: pointer;
 }
 
 td div.color {

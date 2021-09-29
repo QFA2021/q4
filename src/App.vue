@@ -1,7 +1,7 @@
 <template>
   <main>
-    <Menu />
-    <Game v-if="false" />
+    <Menu v-if="inMenu" @startGame="startGame" />
+    <Game :state="state" v-if="!inMenu" @toMenu="inMenu = true" />
   </main>
 
   <footer>
@@ -13,6 +13,7 @@
 import { Options, Vue } from "vue-class-component";
 import Game from "@/components/Game.vue";
 import Menu from "@/components/Menu.vue";
+import { emptyGame, GameRules, GameState } from "./GameState";
 
 @Options({
   data() {
@@ -26,6 +27,8 @@ import Menu from "@/components/Menu.vue";
     }
 
     return {
+      inMenu: true,
+      state: {},
       copyright: names.join(", ") + " " + new Date().getFullYear(),
     };
   },
@@ -36,6 +39,13 @@ import Menu from "@/components/Menu.vue";
 })
 export default class App extends Vue {
   private copyright!: string;
+  private inMenu!: boolean;
+  private state!: GameState;
+
+  startGame(rules: GameRules) {
+    this.inMenu = false;
+    this.state = emptyGame(rules);
+  }
 }
 </script>
 
@@ -54,7 +64,6 @@ body {
 main {
   min-height: 80vh;
 }
-
 
 tr.controls {
   position: sticky;

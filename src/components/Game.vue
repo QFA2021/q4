@@ -1,6 +1,6 @@
 <template>
   <h1>
-    <img src="@/assets/Title.svg" height="50" width="144" alt="q4 Logo" />
+    <img src="@/assets/Title.svg" height="50" width="144" alt="q4 Logo" @click="$emit('toMenu')" />
     <span :class="{ player1: state.next_player }"
       >Next player: {{ getCurrentPlayerColor(state.next_player) }}</span
     >
@@ -33,7 +33,7 @@
 import { Options, Vue } from "vue-class-component";
 import GameBoard from "@/components/GameBoard.vue";
 import Alert from "@/components/Alert.vue";
-import { emptyGame, GameState, Piece } from "@/GameState";
+import { GameState, Piece } from "@/GameState";
 import { playerToColor } from "@/GameVisual";
 import {
   collapsePiece,
@@ -44,13 +44,16 @@ import {
 } from "@/GameLogic";
 
 @Options({
+  props: {
+    state: Object,
+  },
   data() {
     return {
-      state: emptyGame(7, 6),
       colorPiece: undefined,
       gameWonShowed: false,
     };
   },
+  emits: ["toMenu"],
   components: {
     GameBoard,
     Alert,
@@ -136,5 +139,9 @@ h1 span {
 }
 h1 span.player1 {
   color: red;
+}
+
+h1 img {
+    cursor: pointer;
 }
 </style>
