@@ -1,8 +1,12 @@
 <template>
   <header>
-    <!-- TODO: specify width -->
     <transition name="fade" appear>
-      <img src="@/assets/Title.svg" width="577" alt="q4 Logo" />
+      <img
+        src="@/assets/Title.svg"
+        width="577"
+        alt="q4 Logo"
+        @click="$emit('backGame')"
+      />
     </transition>
   </header>
 
@@ -49,7 +53,7 @@ import { Options, Vue } from "vue-class-component";
 import GameExplanation from "./GameExplanation.vue";
 
 @Options({
-  emits: ["startGame"],
+  emits: ["startGame", "backGame"],
   components: {
     GameExplanation,
   },
@@ -73,6 +77,7 @@ header {
 
 img {
   max-width: 100%;
+  cursor: pointer;
 }
 .fade-enter-active {
   transition: opacity 0.5s ease-out, transform 0.5s ease-out;

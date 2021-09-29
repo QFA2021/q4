@@ -1,6 +1,6 @@
 <template>
   <main>
-    <Menu v-if="inMenu" @startGame="startGame" />
+    <Menu v-if="inMenu" @startGame="startGame" @backGame="backGame" />
     <Game :state="state" v-if="!inMenu" @toMenu="inMenu = true" />
   </main>
 
@@ -46,6 +46,13 @@ export default class App extends Vue {
     this.state = emptyGame(rules);
   }
 
+  backGame() {
+    if (this.state !== undefined) {
+      this.inMenu = false;
+    }
+  }
+
+  // called when service worker has updated
   offerReload() {
     (this.$refs.offer as Alert).showModal = true;
   }
@@ -54,8 +61,8 @@ export default class App extends Vue {
     location.reload();
   }
 
+  // update copyright every 10s
   mounted() {
-    // update copyright every 10s
     this.randomCopyright();
   }
 
