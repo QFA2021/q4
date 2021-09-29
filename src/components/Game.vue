@@ -27,6 +27,20 @@
     You have performed {{ state.playerAllowedCollapses }} out of
     {{ state.collapsesBeforeMove }} allowed collapses before your move.
   </p>
+  <p class="classicalMoves">
+    <strong>remaining classical moves:</strong>&nbsp;
+    <span
+      :class="{ low: state.playerDoubleAllowedClassical[0] <= 2 }"
+      style="color: red"
+      >red: {{ state.playerDoubleAllowedClassical[0] / 2 }}</span
+    >
+    &mdash;
+    <span
+      :class="{ low: state.playerDoubleAllowedClassical[1] <= 2 }"
+      style="color: blue"
+      >blue: {{ state.playerDoubleAllowedClassical[1] / 2 }}</span
+    >
+  </p>
 
   <Alert
     title="Illegal move!"
@@ -190,8 +204,16 @@ h1 img {
   cursor: pointer;
 }
 
-p.outOfMoves {
+.outOfMoves {
   color: red;
+  font-weight: bold;
+}
+
+.classicalMoves {
+  font-size: 20px;
+  margin-bottom: 0;
+}
+.classicalMoves .low {
   font-weight: bold;
 }
 </style>

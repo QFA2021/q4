@@ -51,6 +51,7 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import GameExplanation from "./GameExplanation.vue";
+import { GameRules } from "@/GameState";
 
 @Options({
   emits: ["startGame", "backGame"],
@@ -60,12 +61,15 @@ import GameExplanation from "./GameExplanation.vue";
 })
 export default class Menu extends Vue {
   startGame(collapsingIsMove: boolean, collapsesBeforeMove: number) {
-    this.$emit("startGame", {
+    const rules: GameRules = {
       width: 7,
       height: 6,
       collapsingIsMove: collapsingIsMove,
       collapsesBeforeMove: collapsesBeforeMove,
-    });
+      classicalMovesStart: 3,
+      classicalMovesMaximum: 4,
+    };
+    this.$emit("startGame", rules);
   }
 }
 </script>

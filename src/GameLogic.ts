@@ -23,7 +23,18 @@ export function isFullySetSuperposColorPiece(p: Piece): boolean {
 
 // return true iff insertion is okay
 export function insertClassicPiece(state: GameState, column: number): boolean {
-    return internalPieceInsert(state, column, nextPiece(state))
+    // you loose one classical piece
+    // but stepGame always increases it by one
+    const playerIndex = state.next_player ? 0 : 1
+    state.playerDoubleAllowedClassical[playerIndex] -= 3
+
+    if (internalPieceInsert(state, column, nextPiece(state))) {
+        return true
+    }
+
+    // revert
+    state.playerDoubleAllowedClassical[playerIndex] += 3
+    return false
 }
 
 function internalPieceInsert(state: GameState, column: number, piece: Piece) {
@@ -85,7 +96,16 @@ function stepGame(state: GameState, collapsed: boolean = false) {
             state.next_player = !state.next_player
         }
     } else { // performed a move
+        const playerIndex = state.next_player ? 1 : 0
+        state.playerDoubleAllowedClassical[playerIndex] =
+            Math.min(state.playerDoubleAllowedClassical[playerIndex] + 1, 2 * state.classicalMovesMaximum)
         state.playerAllowedCollapses = state.collapsesBeforeMove
+
+        // you get another turn if the other player has no classical moves left
+        if (state.playerDoubleAllowedClassical[1 - playerIndex] <= 1) {
+            state.playerDoubleAllowedClassical[1 - playerIndex] += 2 * state.classicalMovesStart
+            state.next_player = !state.next_player
+        }
     }
 }
 

@@ -6,6 +6,8 @@ export interface GameRules {
     // game rules
     collapsingIsMove: boolean,
     collapsesBeforeMove: number,
+    classicalMovesStart: number,
+    classicalMovesMaximum: number,
 }
 
 export interface GameState extends GameRules {
@@ -14,6 +16,7 @@ export interface GameState extends GameRules {
     next_stone_id: number, // ID of next move to be done by a player
     next_color_id: number,
     playerAllowedCollapses: number,
+    playerDoubleAllowedClassical: number[],
 
     // board state
     worlds: World<Piece>[],
@@ -61,6 +64,7 @@ export function emptyGame(rules: GameRules): GameState {
         next_stone_id: 1,
         next_color_id: 1,
         playerAllowedCollapses: rules.collapsesBeforeMove,
+        playerDoubleAllowedClassical: [2 * rules.classicalMovesStart, 2 * rules.classicalMovesStart],
 
         worlds: [{
             data: {}
