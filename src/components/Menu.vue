@@ -33,14 +33,26 @@
         </button>
       </td>
     </tr>
+    <tr>
+      <td>
+        <button @click="$refs.expl.open()">
+          <h3>Show game explanation</h3>
+        </button>
+      </td>
+    </tr>
   </table>
+  <GameExplanation ref="expl" />
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
+import GameExplanation from "./GameExplanation.vue";
 
 @Options({
   emits: ["startGame"],
+  components: {
+    GameExplanation,
+  },
 })
 export default class Menu extends Vue {
   startGame(collapsingIsMove: boolean, collapsesBeforeMove: number) {

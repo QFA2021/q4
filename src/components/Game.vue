@@ -10,6 +10,7 @@
     <span :class="{ player1: state.next_player }"
       >Next player: {{ getCurrentPlayerColor(state.next_player) }}</span
     >
+    <button @click="$refs.expl.open()">Help</button>
   </h1>
   <GameBoard
     :state="state"
@@ -19,6 +20,7 @@
     @placeColor="placeColor"
     @manualCollapse="manualCollapse"
   />
+
   <Alert
     title="Illegal move!"
     message="That move is illegal! It cannot be completed in any of the possible world states."
@@ -41,12 +43,28 @@
     "
     :shouldOpen="state.winner !== undefined"
   />
+
+  <GameExplanation ref="expl">
+    <template
+      v-if="state.collapsingIsMove || state.collapsesBeforeMove < Infinity"
+    >
+      <h3>Specials Game Rules</h3>
+      <p v-if="state.collapsingIsMove">
+        Collapsing a piece counts as a players move.
+      </p>
+      <p v-if="state.collapsesBeforeMove < Infinity">
+        Each player is allowed to perform
+        {{ state.collapsesBeforeMove }} collapses before performing their move.
+      </p>
+    </template>
+  </GameExplanation>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import Alert from "@/components/Alert.vue";
 import GameBoard from "@/components/GameBoard.vue";
+import GameExplanation from "@/components/GameExplanation.vue";
 import { GameState, Piece } from "@/GameState";
 import { playerToColor } from "@/GameVisual";
 import {
@@ -71,6 +89,7 @@ import {
   components: {
     Alert,
     GameBoard,
+    GameExplanation,
   },
 })
 export default class Game extends Vue {
@@ -137,6 +156,23 @@ h1 span {
 }
 h1 span.player1 {
   color: red;
+}
+h1 button {
+  position: relative;
+  top: -19px;
+  margin-left: 30px;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+
+  cursor: pointer;
+  background-color: hsl(291deg 29% 76% / 50%);
+  box-shadow: 0 2px 2px rgb(0 0 0 / 20%);
+  transition: box-shadow 0.1s ease;
+}
+h1 button:hover {
+  box-shadow: 1px 3px 2px rgb(0 0 0 / 40%);
 }
 
 h1 img {

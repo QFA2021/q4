@@ -18,7 +18,7 @@
             alt="q4 Logo"
           />
         </slot>
-        <p>{{ message }}</p>
+        <p v-if="message">{{ message }}</p>
       </div>
     </div>
   </transition>
@@ -48,7 +48,8 @@ import { Options, Vue } from "vue-class-component";
 export default class Alert extends Vue {
   title!: String;
   message!: String;
-  showModal!: boolean;
+  shouldOpen!: Boolean;
+  showModal!: Boolean;
   showDone!: Boolean;
   private keyboardEL: any;
 
