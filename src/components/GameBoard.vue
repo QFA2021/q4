@@ -32,7 +32,7 @@
         v-for="column in state.width"
         :key="column"
         :set="(col = state.occupancyCache[column]?.[row])"
-        :class="{ empty: col === undefined }"
+        :class="{ empty_player2: col === undefined, empty_player1: col === undefined && state.next_player }"
       >
         <template v-for="piece in col" :key="piece.id">
           <transition name="slide" appear>
@@ -250,8 +250,12 @@ th button.reset {
   background: black;
 }
 
-td.empty {
-  background-color: rgb(100, 100, 100, 0.2);
+td.empty_player2 {
+  background-color: rgba(0, 135, 255, 0.11);
+}
+
+td.empty_player1 {
+  background-color: rgba(255, 0, 0, 0.11);
 }
 
 td div {
