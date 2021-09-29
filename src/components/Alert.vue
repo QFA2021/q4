@@ -1,12 +1,20 @@
 <template>
   <transition name="modal">
-    <div class="container" v-if="showModal" @click="showModal = false">
+    <div class="container" v-if="showModal" @click="clickBackground">
       <div class="wrapper">
         <h2>
           <span>{{ title }}</span>
-          <button aria-label="Close">×</button>
+          <button aria-label="Close" @click="showModal = false">×</button>
         </h2>
-        <img src="@/assets/Title.svg" height="111" width="320" alt="q4 Logo" />
+        <slot>
+          <img
+            src="@/assets/Title.svg"
+            height="111"
+            width="320"
+            alt="q4 Logo"
+            v-if="false"
+          />
+        </slot>
         <p>{{ message }}</p>
       </div>
     </div>
@@ -20,11 +28,17 @@ import { Options, Vue } from "vue-class-component";
   props: {
     title: String,
     message: String,
+    shouldOpen: Boolean,
   },
   data() {
     return {
       showModal: false,
     };
+  },
+  watch: {
+    shouldOpen() {
+      this.showModal = this.shouldOpen;
+    },
   },
   mounted() {
     this._el = document.addEventListener("keyup", (event) => {
@@ -41,6 +55,12 @@ export default class Alert extends Vue {
   title!: String;
   message!: String;
   showModal!: boolean;
+
+  clickBackground(event: PointerEvent) {
+    if (event.target === event.currentTarget) {
+      this.showModal = false;
+    }
+  }
 }
 </script>
 
@@ -52,6 +72,9 @@ export default class Alert extends Vue {
   width: 100%;
   height: 100%;
 
+  display: flex;
+  flex-direction: column;
+
   z-index: 9998;
   background-color: rgba(0, 0, 0, 0.5);
   transition: opacity 0.3s ease;
@@ -62,12 +85,21 @@ export default class Alert extends Vue {
   opacity: 0;
 }
 
+.container:before,
+.container:after {
+  content: "";
+  flex: 1;
+}
+
 .wrapper {
-  width: 420px;
+  width: 450px;
   background: white;
   border-radius: 5px;
-  margin: 80px auto 0;
+  margin: 10px auto 0;
   cursor: default;
+
+  max-height: calc(100vh - 20px);
+  overflow-y: auto;
 
   will-change: transform;
   transition: transform 0.3s ease-out;
@@ -86,6 +118,7 @@ h2 {
   display: flex;
   border-bottom: 1px solid gray;
   padding: 20px 50px 10px;
+  margin-top: 0;
   font-size: 2rem;
 }
 h2 > span {
@@ -100,8 +133,11 @@ button {
 }
 
 p {
-  padding: 20px 50px 30px;
+  padding: 20px 50px 20px;
   font-size: 1rem;
+}
+video + p {
+  margin-top: 0;
 }
 
 img {

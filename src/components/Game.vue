@@ -23,22 +23,30 @@
     title="Illegal move!"
     message="That move is illegal! It cannot be completed in any of the possible world states."
     ref="modal"
-  />
+  >
+    <video
+      src="@/assets/NeinNeinNein.mp4"
+      autoplay
+      preload
+      width="320"
+      height="431"
+    ></video>
+  </Alert>
   <Alert
-    title="Game Over!"
+    title="Game Won!"
     :message="
       'Player ' +
       getCurrentPlayerColor(state.winner?.player1) +
       ' has won in all possible states of the game!'
     "
-    v-if="state.winner !== undefined"
+    :shouldOpen="state.winner !== undefined"
   />
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import GameBoard from "@/components/GameBoard.vue";
 import Alert from "@/components/Alert.vue";
+import GameBoard from "@/components/GameBoard.vue";
 import { GameState, Piece } from "@/GameState";
 import { playerToColor } from "@/GameVisual";
 import {
@@ -61,8 +69,8 @@ import {
   },
   emits: ["toMenu"],
   components: {
-    GameBoard,
     Alert,
+    GameBoard,
   },
 })
 export default class Game extends Vue {
