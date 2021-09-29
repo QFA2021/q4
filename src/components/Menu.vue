@@ -2,7 +2,7 @@
   <header>
     <!-- TODO: specify width -->
     <transition name="fade" appear>
-      <img src="@/assets/Title.svg" height="200" alt="q4 Logo" />
+      <img src="@/assets/Title.svg" width="577" alt="q4 Logo" />
     </transition>
   </header>
 
@@ -71,6 +71,9 @@ header {
   margin-top: 20px;
 }
 
+img {
+  max-width: 100%;
+}
 .fade-enter-active {
   transition: opacity 0.5s ease-out, transform 0.5s ease-out;
 }
