@@ -17,19 +17,10 @@ import { emptyGame, GameRules, GameState } from "./GameState";
 
 @Options({
   data() {
-    // shuffle names
-    const names = ["Magnus Kühn", "Robert Junge", "Hazem Riahi"];
-    for (let i = names.length - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1));
-      const temp = names[i];
-      names[i] = names[j];
-      names[j] = temp;
-    }
-
     return {
       inMenu: true,
       state: {},
-      copyright: names.join(", ") + " " + new Date().getFullYear(),
+      copyright: "",
     };
   },
   components: {
@@ -52,6 +43,27 @@ export default class App extends Vue {
   startGame(rules: GameRules) {
     this.inMenu = false;
     this.state = emptyGame(rules);
+  }
+
+  mounted() {
+    // update copyright every 10s
+    this.randomCopyright();
+  }
+
+  randomCopyright() {
+    // shuffle names
+    const names = ["Magnus Kühn", "Robert Junge", "Hazem Riahi"];
+    for (let i = names.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      const temp = names[i];
+      names[i] = names[j];
+      names[j] = temp;
+    }
+
+    this.copyright = names.join(", ") + " " + new Date().getFullYear();
+
+    // update copyright every 10s while tab is active
+    requestAnimationFrame(() => setTimeout(this.randomCopyright.bind(this), 1000));
   }
 }
 </script>
