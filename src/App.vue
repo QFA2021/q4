@@ -63,7 +63,7 @@ export default class App extends Vue {
     this.copyright = names.join(", ") + " " + new Date().getFullYear();
 
     // update copyright every 10s while tab is active
-    requestAnimationFrame(() => setTimeout(this.randomCopyright.bind(this), 1000));
+    requestAnimationFrame(() => setTimeout(this.randomCopyright.bind(this), 10000));
   }
 }
 </script>
