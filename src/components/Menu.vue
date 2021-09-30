@@ -80,8 +80,9 @@ header {
 }
 
 img {
-  max-width: 100%;
+  max-width: calc(100% - 20px);
   cursor: pointer;
+  margin: 10px;
 }
 .fade-enter-active {
   transition: opacity 0.5s ease-out, transform 0.5s ease-out;
