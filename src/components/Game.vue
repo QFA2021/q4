@@ -48,7 +48,6 @@
     ref="modal"
   >
     <video
-      src="@/assets/NeinNeinNein.mp4"
       autoplay
       preload
       width="320"
@@ -56,7 +55,10 @@
       ref="video"
       @click="$refs.video.play()"
       style="cursor: pointer"
-    ></video>
+    >
+      <source src="@/assets/NeinNeinNein_large.webm" type="video/webm" media="(-webkit-min-device-pixel-ratio: 2)">
+      <source src="@/assets/NeinNeinNein_small.webm" type="video/webm">
+    </video>
   </Alert>
   <Alert
     title="Game Won!"
