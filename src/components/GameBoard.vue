@@ -8,7 +8,7 @@
     <tr class="controls">
       <th v-for="column in state.width" :key="column">
         <button @click="placeColor(column)" class="color">Color</button>
-        <template v-if="!colorPiece">
+        <template v-if="!state.colorPiece">
           <button @click="placeClassical(column)" class="classic">
             Classic
           </button>
@@ -100,7 +100,6 @@ interface Highlight {
 @Options({
   props: {
     state: Object,
-    colorPiece: Boolean,
   },
   data() {
     return {
@@ -112,7 +111,6 @@ interface Highlight {
 })
 export default class GameBoard extends Vue {
   state!: GameState;
-  colorPiece!: Boolean;
   preparedColumn?: number;
   highlight?: Highlight;
 

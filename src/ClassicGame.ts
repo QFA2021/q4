@@ -7,7 +7,7 @@ import { World, Piece, Winner } from "./GameState";
  * Returns true iff the world was mutated
  * ~> returns false iff the move is illegal
  */
-export function insertPiece(height: number, world: World<Piece>, column: number, piece: Piece): boolean {
+export function insertPiece(height: number, world: World<Winner,Piece>, column: number, piece: Piece): boolean {
     if (column in world.data) {
         let row = height
         while (row >= 1) {
@@ -30,7 +30,7 @@ export function insertPiece(height: number, world: World<Piece>, column: number,
 }
 
 const WIN_LENGTH = 4;
-export function computeWinner(height: number, width: number, world: World<Piece>, onlyStable: boolean = true) {
+export function computeWinner(height: number, width: number, world: World<Winner,Piece>, onlyStable: boolean = true) {
     // columns
     for (let column = 1; column <= width; column++) {
         const winner = checkWinnerDirection(height, width, world,
@@ -72,7 +72,7 @@ export function computeWinner(height: number, width: number, world: World<Piece>
  * Return player1 as bool or undefined
  */
 function checkWinnerDirection(height: number, width: number,
-    world: World<Piece>, row: number, column: number,
+    world: World<Winner,Piece>, row: number, column: number,
     rowD: number, columnD: number, onlyStable: boolean = true): Winner | undefined {
     let count = 0
     let player1 = undefined

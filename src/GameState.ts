@@ -10,6 +10,7 @@ export interface GameRules {
     classicalMovesMaximum: number,
 }
 
+
 export interface GameState extends GameRules {
     // internal/invisible state
     next_player: boolean, // true iff its the red player's turn. TODO rename to nextPlayerRed
@@ -19,19 +20,22 @@ export interface GameState extends GameRules {
     playerDoubleAllowedClassical: number[],
 
     // board state
-    worlds: World<Piece>[],
+    worlds: World<Winner,Piece>[],
     winner?: Winner,
+
+    // reference to the first color piece if the 2nd has yet to be placed
+    colorPiece?: Piece,
 
     // cache for board occupancy
     // for each cell we store the set of pieces that occur there in *any* world
     occupancyCache: WorldStack<WorldStack<Set<Piece>>>,
 }
 
-export interface World<T> {
+export interface World<W,T> {
     data: WorldStack<WorldStack<T>>,
 
     // undefined ~> no winner yet
-    winner?: Winner,
+    winner?: W,
 }
 
 export interface WorldStack<T> {
@@ -47,6 +51,7 @@ export interface Piece {
 
     // optional for pieces in color-supoerposition
     colorID?: number,
+    colorPieceSecond?: boolean, // true if this is the first of the two color pieces
     colorPieceOther?: Piece, // reference to the other piece
 }
 

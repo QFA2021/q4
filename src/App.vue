@@ -3,7 +3,17 @@
   <Game v-if="!inMenu" :state="state" @toMenu="inMenu = true" />
 
   <footer>
-    <p>&copy; {{ copyright }}</p>
+    <p>
+      &copy; {{ copyright }}
+      <button
+        @click="undo()"
+        v-if="stateStack.length > 1"
+        aria-label="Undo"
+        title="Undo"
+      >
+        ⭯
+      </button>
+    </p>
   </footer>
 
   <Alert title="New Version Available" ref="offer">
@@ -19,6 +29,7 @@ import Alert from "@/components/Alert.vue";
 import Game from "@/components/Game.vue";
 import Menu from "@/components/Menu.vue";
 import { emptyGame, GameRules, GameState } from "./GameState";
+import { exportState, importState } from "./GameStorage";
 
 @Options({
   data() {
@@ -26,7 +37,18 @@ import { emptyGame, GameRules, GameState } from "./GameState";
       inMenu: true,
       state: undefined,
       copyright: "",
+      stateStack: [],
     };
+  },
+  watch: {
+    state: {
+      handler(current) {
+        if (current !== undefined) {
+          (this as App).stateStack.push(exportState(current));
+        }
+      },
+      deep: true,
+    },
   },
   components: {
     Alert,
@@ -38,10 +60,12 @@ export default class App extends Vue {
   private copyright!: string;
   private inMenu!: boolean;
   private state?: GameState;
+  private stateStack!: string[];
 
   startGame(rules: GameRules) {
     this.inMenu = false;
     this.state = emptyGame(rules);
+    this.stateStack = [];
   }
 
   backGame() {
@@ -81,6 +105,20 @@ export default class App extends Vue {
       setTimeout(this.randomCopyright.bind(this), 10000)
     );
   }
+
+  undo() {
+    // the current state is on top of the stack
+    this.stateStack.pop();
+
+    // also remove the previous state as it will be readded by the watcher
+    const ex = this.stateStack.pop();
+    if (ex !== undefined) {
+      this.state = importState(ex);
+
+      // go to menu in case of failure
+      this.inMenu = this.state === undefined;
+    }
+  }
 }
 </script>
 
@@ -117,5 +155,20 @@ footer {
   grid-row: 4;
   margin-top: 20px;
   border-top: 1px solid gray;
+
+  button {
+    border: none;
+    border-radius: 5px;
+    background: lightgray;
+    margin-left: 10px;
+    cursor: pointer;
+
+    box-shadow: 2px 2px 2px rgb(0 0 0 / 20%);
+    transition: box-shadow 0.1s ease;
+
+    &:hover {
+      box-shadow: 2px 2px 2px rgb(0 0 0 / 40%);
+    }
+  }
 }
 </style>

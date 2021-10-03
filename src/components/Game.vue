@@ -17,7 +17,6 @@
   <main>
     <GameBoard
       :state="state"
-      :colorPiece="colorPiece !== undefined"
       @placeClassical="placeClassical"
       @placeSpace="placeSpace"
       @placeColor="placeColor"
@@ -116,7 +115,6 @@ import {
   },
   data() {
     return {
-      colorPiece: undefined,
       gameWonShowed: false,
     };
   },
@@ -129,7 +127,6 @@ import {
 })
 export default class Game extends Vue {
   state!: GameState;
-  colorPiece?: Piece = undefined;
   private gameWonShowed!: boolean;
 
   placeClassical(column: number) {
@@ -138,17 +135,17 @@ export default class Game extends Vue {
     }
   }
   placeColor(column: number) {
-    if (this.colorPiece === undefined) {
+    if (this.state.colorPiece === undefined) {
       // first color piece
-      this.colorPiece = insertColorPiece(this.state, column);
-      if (this.colorPiece === undefined) {
+      this.state.colorPiece = insertColorPiece(this.state, column);
+      if (this.state.colorPiece === undefined) {
         // illegal move
         (this.$refs.modal as Alert).showModal = true;
       }
     } else {
       // second color piece
-      if (insertSecondColorPiece(this.state, column, this.colorPiece)) {
-        this.colorPiece = undefined;
+      if (insertSecondColorPiece(this.state, column, this.state.colorPiece)) {
+        this.state.colorPiece = undefined;
       } else {
         (this.$refs.modal as Alert).showModal = true;
       }

@@ -1,5 +1,5 @@
 import { computeWinner, insertPiece } from "./ClassicGame";
-import { GameState, Piece, World } from "./GameState";
+import { GameState, Piece, Winner, World } from "./GameState";
 import { computeWorldOccupation } from "./GameVisual";
 
 function nextPiece(state: GameState): Piece {
@@ -113,6 +113,7 @@ function stepGame(state: GameState, collapsed: boolean = false) {
 export function insertColorPiece(state: GameState, column: number): Piece | undefined {
     const piece = nextPiece(state)
     piece.colorID = state.next_color_id
+    piece.colorPieceSecond = false
     if (internalPieceInsert(state, column, piece)) {
         state.next_color_id++
         return piece
@@ -128,6 +129,7 @@ export function insertSecondColorPiece(state: GameState, column: number, piecePr
         player1: piecePrimary.player1,
         stable: piecePrimary.stable,
         colorID: piecePrimary.colorID,
+        colorPieceSecond: true,
         colorPieceOther: piecePrimary
     }
 
@@ -144,7 +146,7 @@ export function insertSpacePiece(state: GameState, columns: number[]): boolean {
     const piece = nextPiece(state)
 
     // try to insert new space-piece
-    const newWorlds = [] as World<Piece>[]
+    const newWorlds = [] as World<Winner,Piece>[]
     for (const world of state.worlds) {
         // iterate over the insertion columns
         for (const column of columns) {
@@ -168,11 +170,11 @@ export function insertSpacePiece(state: GameState, columns: number[]): boolean {
     return true
 }
 
-function cloneWorld<T>(world: World<T>): World<T> {
+function cloneWorld<W,T>(world: World<W,T>): World<W,T> {
     const newWorld = {
         data: {},
         winner: world.winner
-    } as World<T>;
+    } as World<W,T>;
     for (const column in world.data) {
         newWorld.data[column] = {};
         for (const row in world.data[column]) {
