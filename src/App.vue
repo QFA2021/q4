@@ -7,7 +7,7 @@
       &copy; {{ copyright }}
       <button
         @click="undo()"
-        v-if="stateStack.length > 1"
+        v-if="stateStack.length > 1 && !inMenu"
         aria-label="Undo"
         title="Undo"
       >
