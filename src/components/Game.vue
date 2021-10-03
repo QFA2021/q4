@@ -72,11 +72,17 @@
     title="Game Won!"
     :message="
       'Player ' +
-      getCurrentPlayerColor(state.winner?.player1) +
-      ' has won in all possible states of the game!'
+        getCurrentPlayerColor(state.winner?.player1) +
+        ' has won in all possible states of the game!'
     "
     :shouldOpen="state.winner !== undefined"
-  />
+    ref="alertWin"
+  >
+    <template v-slot:buttons>
+      <button @click="$emit('toMenu')">New Game</button>
+      <button @click="$refs.alertWin.showModal = false">Continue</button>
+    </template>
+  </Alert>
 
   <GameExplanation ref="expl">
     <template

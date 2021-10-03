@@ -18,8 +18,10 @@
 
   <Alert title="New Version Available" ref="offer">
     <p>There is a new version available. Do you want to restart?</p>
-    <button @click="reloadNow()">Reload with new version</button>
-    <button @click="$refs.offer.showModal = false">Continue</button>
+    <template v-slot:buttons>
+      <button @click="reloadNow()">Reload with new version</button>
+      <button @click="$refs.offer.showModal = false">Continue</button>
+    </template>
   </Alert>
 </template>
 
@@ -33,7 +35,10 @@ import { exportState, importState } from "./GameStorage";
 
 @Options({
   data() {
-    const state = localStorage.lastState && process.env.NODE_ENV === 'production' ? importState(localStorage.lastState) : undefined;
+    const state =
+      localStorage.lastState && process.env.NODE_ENV === "production"
+        ? importState(localStorage.lastState)
+        : undefined;
     return {
       inMenu: state === undefined,
       state: state,

@@ -20,6 +20,7 @@
             />
           </slot>
           <p v-if="message">{{ message }}</p>
+          <slot name="buttons"></slot>
         </div>
       </div>
     </div>
@@ -169,7 +170,7 @@ p {
 .content {
   padding: 0 20px;
   :deep(button) {
-    margin: 0 5px;
+    margin: 10px 5px 0;
     padding: 10px;
     border: none;
     border-radius: 10px;
