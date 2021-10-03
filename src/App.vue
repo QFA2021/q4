@@ -33,9 +33,10 @@ import { exportState, importState } from "./GameStorage";
 
 @Options({
   data() {
+    const state = localStorage.lastState && process.env.NODE_ENV === 'production' ? importState(localStorage.lastState) : undefined;
     return {
-      inMenu: true,
-      state: undefined,
+      inMenu: state === undefined,
+      state: state,
       copyright: "",
       stateStack: [],
     };
@@ -44,7 +45,9 @@ import { exportState, importState } from "./GameStorage";
     state: {
       handler(current) {
         if (current !== undefined) {
-          (this as App).stateStack.push(exportState(current));
+          const ex = exportState(current);
+          (this as App).stateStack.push(ex);
+          localStorage.lastState = ex;
         }
       },
       deep: true,
