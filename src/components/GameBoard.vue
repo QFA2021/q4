@@ -197,7 +197,7 @@ allowedCollapses: ${this.state.playerAllowedCollapses}`;
 table {
   border: 1px solid black;
   border-collapse: collapse;
-  margin: 0 auto;
+  margin: -1px auto 0;
 }
 
 td,

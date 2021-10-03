@@ -1,46 +1,51 @@
 <template>
-  <h1>
+  <header>
     <img
       src="@/assets/Title.svg"
       height="50"
       width="144"
       alt="q4 Logo"
       @click="$emit('toMenu')"
+      aria-label="Go to menu"
     />
-    <span :class="{ player1: state.next_player }"
-      >Next player: {{ getCurrentPlayerColor(state.next_player) }}</span
-    >
+    <h1 :class="{ player1: state.next_player }">
+      Next player: {{ getCurrentPlayerColor(state.next_player) }}
+    </h1>
     <button @click="$refs.expl.open()">Help</button>
-  </h1>
-  <GameBoard
-    :state="state"
-    :colorPiece="colorPiece !== undefined"
-    @placeClassical="placeClassical"
-    @placeSpace="placeSpace"
-    @placeColor="placeColor"
-    @manualCollapse="manualCollapse"
-  />
-  <p
-    v-if="state.collapsesBeforeMove < Infinity"
-    :class="{ outOfMoves: state.playerAllowedCollapses === 0 }"
-  >
-    You have performed {{ state.playerAllowedCollapses }} out of
-    {{ state.collapsesBeforeMove }} allowed collapses before your move.
-  </p>
-  <p class="classicalMoves">
-    <strong>remaining classical moves:</strong>&nbsp;
-    <span
-      :class="{ low: state.playerDoubleAllowedClassical[0] <= 2 }"
-      style="color: red"
-      >red: {{ state.playerDoubleAllowedClassical[0] / 2 }}</span
+  </header>
+
+  <main>
+    <GameBoard
+      :state="state"
+      :colorPiece="colorPiece !== undefined"
+      @placeClassical="placeClassical"
+      @placeSpace="placeSpace"
+      @placeColor="placeColor"
+      @manualCollapse="manualCollapse"
+    />
+
+    <p
+      v-if="state.collapsesBeforeMove < Infinity"
+      :class="{ outOfMoves: state.playerAllowedCollapses === 0 }"
     >
-    &mdash;
-    <span
-      :class="{ low: state.playerDoubleAllowedClassical[1] <= 2 }"
-      style="color: blue"
-      >blue: {{ state.playerDoubleAllowedClassical[1] / 2 }}</span
-    >
-  </p>
+      You have performed {{ state.playerAllowedCollapses }} out of
+      {{ state.collapsesBeforeMove }} allowed collapses before your move.
+    </p>
+    <p class="classicalMoves">
+      <strong>remaining classical moves:</strong>&nbsp;
+      <span
+        :class="{ low: state.playerDoubleAllowedClassical[0] <= 2 }"
+        style="color: red"
+        >red: {{ state.playerDoubleAllowedClassical[0] / 2 }}</span
+      >
+      &mdash;
+      <span
+        :class="{ low: state.playerDoubleAllowedClassical[1] <= 2 }"
+        style="color: blue"
+        >blue: {{ state.playerDoubleAllowedClassical[1] / 2 }}</span
+      >
+    </p>
+  </main>
 
   <Alert
     title="Illegal move!"
@@ -167,32 +172,32 @@ export default class Game extends Vue {
 
 <style scoped lang="scss">
 h1 {
+  margin: 0;
+  vertical-align: middle;
+
+  color: blue;
+  &.player1 {
+    color: red;
+  }
+}
+
+header {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: max-content max-content max-content;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
   position: sticky;
   top: 0;
   z-index: 10;
 
-  height: 50px;
-  min-width: 500px;
-  margin: 10px 0;
-
+  padding: 10px 0;
   background: white;
   border-bottom: 1px solid black;
 
-  span {
-    top: -15px;
-    position: relative;
-    margin-left: 20px;
-    color: blue;
-
-    &.player1 {
-      color: red;
-    }
-  }
-
   button {
-    position: relative;
-    top: -19px;
-    margin-left: 30px;
     padding: 10px;
     border: none;
     border-radius: 10px;
@@ -204,7 +209,7 @@ h1 {
     transition: box-shadow 0.1s ease;
 
     &:hover {
-      box-shadow: 1px 3px 2px rgb(0 0 0 / 40%);
+      box-shadow: 0 3px 2px rgb(0 0 0 / 40%);
     }
   }
 

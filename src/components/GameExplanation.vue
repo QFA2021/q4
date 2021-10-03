@@ -85,4 +85,7 @@ export default class GameExplanation extends Vue {
 :deep(.wrapper) {
   min-width: 850px;
 }
+:deep(img) {
+  width: 100%;
+}
 </style>

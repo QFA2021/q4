@@ -1,8 +1,6 @@
 <template>
-  <main>
-    <Menu v-if="inMenu" @startGame="startGame" @backGame="backGame" />
-    <Game :state="state" v-if="!inMenu" @toMenu="inMenu = true" />
-  </main>
+  <Menu v-if="inMenu" @startGame="startGame" @backGame="backGame" />
+  <Game v-if="!inMenu" :state="state" @toMenu="inMenu = true" />
 
   <footer>
     <p>&copy; {{ copyright }}</p>
@@ -92,26 +90,31 @@ body {
 }
 
 #app {
-  display: grid;
   font-family: Roboto, Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-main {
-  min-height: 80vh;
+
+  min-height: 100vh;
   display: grid;
+  grid-template-rows: max-content max-content 1fr max-content;
+
+  // force the horizontal overflow to go somewhere
+  // otherwise the entire page becomes much taller for some reason
+  overflow-y: auto;
 }
 
+// game control headers
 tr.controls {
   position: sticky;
   z-index: 10;
-  top: 50.5px;
+  top: 70.5px;
   background: white;
 }
 
 footer {
+  grid-row: 4;
   margin-top: 20px;
   border-top: 1px solid gray;
 }
