@@ -143,20 +143,21 @@ h2 {
   font-size: 2rem;
   cursor: pointer;
 
+  position: sticky;
+  top: 0;
+  background: white;
+
   > span {
     flex: 1;
   }
 
-  position: sticky;
-  top: 0;
-  background: white;
-}
-
-button {
-  background: white;
-  color: gray;
-  border: none;
-  font-size: 2rem;
+  button {
+    background: white;
+    color: gray;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+  }
 }
 
 p {
