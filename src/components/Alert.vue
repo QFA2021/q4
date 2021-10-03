@@ -6,9 +6,9 @@
   >
     <div class="container" v-if="showModal" @click="clickBackground">
       <div class="wrapper">
-        <h2>
+        <h2 @click="showModal = false">
           <span>{{ title }}</span>
-          <button aria-label="Close" @click="showModal = false">×</button>
+          <button aria-label="Close">×</button>
         </h2>
         <div class="content">
           <slot>
@@ -138,13 +138,18 @@ export default class Alert extends Vue {
 h2 {
   display: flex;
   border-bottom: 1px solid gray;
-  padding: 20px 20px 10px;
   margin-top: 0;
+  padding: 20px 20px 10px;
   font-size: 2rem;
+  cursor: pointer;
 
   > span {
     flex: 1;
   }
+
+  position: sticky;
+  top: 0;
+  background: white;
 }
 
 button {
@@ -152,7 +157,6 @@ button {
   color: gray;
   border: none;
   font-size: 2rem;
-  cursor: pointer;
 }
 
 p {

@@ -109,7 +109,7 @@ body {
 tr.controls {
   position: sticky;
   z-index: 10;
-  top: 70.5px;
+  top: 71px;
   background: white;
 }
 
