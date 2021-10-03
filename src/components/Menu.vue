@@ -23,9 +23,14 @@
       <h3>All Quantum</h3>
       <span>Allows all quantum moves and arbitrarily many collapses.</span>
     </button>
-    <button @click="$refs.expl.open()">
-      <h3>Show game explanation</h3>
-    </button>
+    <div>
+      <button @click="$refs.expl.open()">
+        <h3>Show game explanation</h3>
+      </button>
+      <button @click="$refs.expl.open('about')">
+        <h3>About</h3>
+      </button>
+    </div>
   </main>
   <GameExplanation ref="expl" />
 </template>
@@ -82,6 +87,11 @@ main {
 
   gap: 20px;
   justify-content: space-around;
+
+  > div {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+  }
 }
 
 button {

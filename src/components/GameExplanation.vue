@@ -62,6 +62,17 @@
     </p>
 
     <img src="@/assets/screenshot_board_5_super_color_collapsed.png" />
+
+    <h3 id="about">About</h3>
+    <p>
+      This game was developed as part of the
+      <a href="https://github.com/QFA2021" target="blank"
+        >course "Quantum Computing and Quantum Games" at Ferienakadiemie 2021</a
+      >. The source code is
+      <a href="https://github.com/QFA2021/q4" target="blank"
+        >available on GitHub</a
+      >.
+    </p>
   </Alert>
 </template>
 
@@ -75,8 +86,18 @@ import Alert from "./Alert.vue";
   },
 })
 export default class GameExplanation extends Vue {
-  open() {
+  open(scrollRef?: string) {
     (this.$refs.alert as Alert).showModal = true;
+
+    if (scrollRef !== undefined) {
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() =>
+            document.getElementById(scrollRef)?.scrollIntoView()
+          )
+        )
+      );
+    }
   }
 }
 </script>
@@ -87,5 +108,8 @@ export default class GameExplanation extends Vue {
 }
 :deep(img) {
   width: 100%;
+}
+:deep(a) {
+  color: black;
 }
 </style>
