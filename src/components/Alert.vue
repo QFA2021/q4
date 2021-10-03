@@ -77,7 +77,7 @@ export default class Alert extends Vue {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .container {
   position: fixed;
   top: 0;
@@ -93,16 +93,16 @@ export default class Alert extends Vue {
   background-color: rgba(0, 0, 0, 0.5);
   transition: opacity 0.3s ease;
   cursor: pointer;
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+  }
 }
 .modal-enter-from,
 .modal-leave-to {
   opacity: 0;
-}
-
-.container:before,
-.container:after {
-  content: "";
-  flex: 1;
 }
 
 .wrapper {
@@ -141,10 +141,12 @@ h2 {
   padding: 20px 20px 10px;
   margin-top: 0;
   font-size: 2rem;
+
+  > span {
+    flex: 1;
+  }
 }
-h2 > span {
-  flex: 1;
-}
+
 button {
   background: white;
   color: gray;
@@ -161,21 +163,21 @@ p {
 
 .content {
   padding: 0 20px;
-}
-.content :deep(button) {
-  margin: 0 5px;
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  font-weight: bold;
+  :deep(button) {
+    margin: 0 5px;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
 
-  cursor: pointer;
-  background-color: hsl(291deg 29% 76% / 50%);
-  box-shadow: 0 2px 2px rgb(0 0 0 / 20%);
-  transition: box-shadow 0.1s ease;
-}
-.content :deep(button:hover) {
-  box-shadow: 1px 3px 2px rgb(0 0 0 / 40%);
+    cursor: pointer;
+    background-color: hsl(291deg 29% 76% / 50%);
+    box-shadow: 0 2px 2px rgb(0 0 0 / 20%);
+    transition: box-shadow 0.1s ease;
+  }
+  :deep(button:hover) {
+    box-shadow: 1px 3px 2px rgb(0 0 0 / 40%);
+  }
 }
 
 img {

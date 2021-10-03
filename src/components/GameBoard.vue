@@ -193,7 +193,7 @@ allowedCollapses: ${this.state.playerAllowedCollapses}`;
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 table {
   border: 1px solid black;
   border-collapse: collapse;
@@ -214,45 +214,50 @@ th {
   height: 77px;
   min-height: 77px;
   vertical-align: baseline;
-}
-th button {
-  width: 80%;
-  margin: 2px auto 0;
-  border: none;
-  border-radius: 7px;
-  height: 22px;
-  cursor: pointer;
 
-  color: white;
-  font-weight: bold;
-  transition: transform 0.1s, ease, background-color 0.3s ease;
-  box-shadow: 0px 2px 2px rgb(0 0 0 / 20%);
-}
-th button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0px 3px 2px rgb(0 0 0 / 20%);
+  button {
+    width: 80%;
+    margin: 2px auto 0;
+    border: none;
+    border-radius: 7px;
+    height: 22px;
+    cursor: pointer;
+
+    color: white;
+    font-weight: bold;
+    transition: transform 0.1s, ease, background-color 0.3s ease;
+    box-shadow: 0px 2px 2px rgb(0 0 0 / 20%);
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0px 3px 2px rgb(0 0 0 / 20%);
+    }
+
+    &.color {
+      background: linear-gradient(90deg, red, blue);
+    }
+    &.classic {
+      background: blue;
+    }
+    &.space {
+      background: linear-gradient(90deg, blue, rgba(0, 0, 0, 0.7), blue);
+    }
+    &.reset {
+      background: black;
+    }
+  }
 }
 
-th button.color {
-  background: linear-gradient(90deg, red, blue);
-}
-.player1 .controls th button.color {
-  background: linear-gradient(90deg, blue, red);
-}
-th button.classic {
-  background: blue;
-}
-.player1 .controls th button.classic {
-  background: red;
-}
-th button.space {
-  background: linear-gradient(90deg, blue, rgba(0, 0, 0, 0.7), blue);
-}
-.player1 .controls th button.space {
-  background: linear-gradient(90deg, red, rgba(0, 0, 0, 0.7), red);
-}
-th button.reset {
-  background: black;
+.player1 .controls th button {
+  &.color {
+    background: linear-gradient(90deg, blue, red);
+  }
+  &.classic {
+    background: red;
+  }
+  &.space {
+    background: linear-gradient(90deg, red, rgba(0, 0, 0, 0.7), red);
+  }
 }
 
 td.empty {
@@ -275,16 +280,16 @@ td div {
   transition: background-color 0.1s ease, color 0.1s ease;
   font-size: 51px;
   font-weight: bold;
-}
-td div.small {
-  border-width: 8px;
-  width: 45px;
-  height: 45px;
-  margin: 2px;
-  font-size: 25px;
-}
-td div.player1 {
-  border-color: red;
+  &.small {
+    border-width: 8px;
+    width: 45px;
+    height: 45px;
+    margin: 2px;
+    font-size: 25px;
+  }
+  &.player1 {
+    border-color: red;
+  }
 }
 .mayCollapse td div.small,
 .mayCollapse td div.highlightColor {
@@ -297,9 +302,9 @@ td div.winning {
 
 td div.highlight {
   background-color: yellow;
-}
-td div.highlight.color {
-  color: yellow;
+  &.color {
+    color: yellow;
+  }
 }
 td div.highlightColor {
   background-color: greenyellow;
@@ -310,26 +315,27 @@ td div.color {
   border-color: transparent;
   background: none;
   color: white;
-}
-td div.color:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
 
-  background: linear-gradient(90deg, blue, red);
-  border-radius: inherit;
-  z-index: -1;
-  margin: -16px;
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 
-  animation: spin 4s linear infinite;
-}
-td div.color.small:before {
-  margin: -8px;
-}
+    background: linear-gradient(90deg, blue, red);
+    border-radius: inherit;
+    z-index: -1;
+    margin: -16px;
 
+    animation: spin 4s linear infinite;
+  }
+
+  &.small:before {
+    margin: -8px;
+  }
+}
 @keyframes spin {
   100% {
     transform: rotate(360deg);

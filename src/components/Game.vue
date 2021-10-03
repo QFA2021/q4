@@ -56,8 +56,12 @@
       @click="$refs.video.play()"
       style="cursor: pointer"
     >
-      <source src="@/assets/NeinNeinNein_large.webm" type="video/webm" media="(-webkit-min-device-pixel-ratio: 2)">
-      <source src="@/assets/NeinNeinNein_small.webm" type="video/webm">
+      <source
+        src="@/assets/NeinNeinNein_large.webm"
+        type="video/webm"
+        media="(-webkit-min-device-pixel-ratio: 2)"
+      />
+      <source src="@/assets/NeinNeinNein_small.webm" type="video/webm" />
     </video>
   </Alert>
   <Alert
@@ -161,7 +165,7 @@ export default class Game extends Vue {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 h1 {
   position: sticky;
   top: 0;
@@ -173,37 +177,40 @@ h1 {
 
   background: white;
   border-bottom: 1px solid black;
-}
 
-h1 span {
-  top: -15px;
-  position: relative;
-  margin-left: 20px;
-  color: blue;
-}
-h1 span.player1 {
-  color: red;
-}
-h1 button {
-  position: relative;
-  top: -19px;
-  margin-left: 30px;
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  font-weight: bold;
+  span {
+    top: -15px;
+    position: relative;
+    margin-left: 20px;
+    color: blue;
 
-  cursor: pointer;
-  background-color: hsl(291deg 29% 76% / 50%);
-  box-shadow: 0 2px 2px rgb(0 0 0 / 20%);
-  transition: box-shadow 0.1s ease;
-}
-h1 button:hover {
-  box-shadow: 1px 3px 2px rgb(0 0 0 / 40%);
-}
+    &.player1 {
+      color: red;
+    }
+  }
 
-h1 img {
-  cursor: pointer;
+  button {
+    position: relative;
+    top: -19px;
+    margin-left: 30px;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+
+    cursor: pointer;
+    background-color: hsl(291deg 29% 76% / 50%);
+    box-shadow: 0 2px 2px rgb(0 0 0 / 20%);
+    transition: box-shadow 0.1s ease;
+
+    &:hover {
+      box-shadow: 1px 3px 2px rgb(0 0 0 / 40%);
+    }
+  }
+
+  img {
+    cursor: pointer;
+  }
 }
 
 .outOfMoves {
@@ -214,8 +221,9 @@ h1 img {
 .classicalMoves {
   font-size: 20px;
   margin-bottom: 0;
-}
-.classicalMoves .low {
-  font-weight: bold;
+
+  .low {
+    font-weight: bold;
+  }
 }
 </style>

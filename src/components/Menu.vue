@@ -74,7 +74,7 @@ export default class Menu extends Vue {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 header {
   margin-top: 20px;
 }
@@ -107,12 +107,13 @@ table button {
   background-color: hsl(291deg 29% 76% / 50%);
   box-shadow: 0 3px 5px rgb(0 0 0 / 20%);
   transition: box-shadow 0.1s ease;
-}
-table button:hover {
-  box-shadow: 0 5px 10px rgb(0 0 0 / 40%);
-}
 
-table button h3 {
-  margin: 0;
+  &:hover {
+    box-shadow: 0 5px 10px rgb(0 0 0 / 40%);
+  }
+
+  h3 {
+    margin: 0;
+  }
 }
 </style>
