@@ -6,7 +6,8 @@
       width="144"
       alt="q4 Logo"
       @click="$emit('toMenu')"
-      aria-label="Go to menu"
+      title="Go to menu"
+      role="button"
     />
     <h1 :class="{ player1: state.next_player }">
       Next player: {{ getCurrentPlayerColor(state.next_player) }}

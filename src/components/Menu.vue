@@ -4,13 +4,18 @@
       <img
         src="@/assets/Title.svg"
         width="577"
+        height="202"
         alt="q4 Logo"
         @click="$emit('backGame')"
+        :style="{ cursor: mayContinue ? 'pointer' : undefined }"
       />
     </transition>
   </header>
 
   <main>
+    <button @click="$emit('backGame')" v-if="mayContinue" class="resumeButton">
+      <h3>Continue last game</h3>
+    </button>
     <button @click="startGame(true, Infinity)">
       <h3>Collapse as Move</h3>
       <span>Collapsing a piece or color is your move!</span>
@@ -41,12 +46,17 @@ import GameExplanation from "./GameExplanation.vue";
 import { GameRules } from "@/GameState";
 
 @Options({
+  props: {
+    mayContinue: Boolean,
+  },
   emits: ["startGame", "backGame"],
   components: {
     GameExplanation,
   },
 })
 export default class Menu extends Vue {
+  mayContinue!: Boolean;
+
   startGame(collapsingIsMove: boolean, collapsesBeforeMove: number) {
     const rules: GameRules = {
       width: 7,
@@ -68,7 +78,6 @@ header {
 
 img {
   max-width: calc(100% - 20px);
-  cursor: pointer;
   margin: 10px;
 }
 .fade-enter-active {
@@ -83,7 +92,7 @@ main {
   display: grid;
   // just max-content breaks word-wrapping, see https://github.com/rachelandrew/gridbugs/issues/46
   grid-template-columns: minmax(0, max-content);
-  grid-template-rows: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
 
   gap: 20px;
   justify-content: space-around;
@@ -112,6 +121,30 @@ button {
 
   h3 {
     margin: 0;
+  }
+
+  &.resumeButton {
+    display: grid;
+    grid-template-columns: max-content max-content;
+    grid-template-rows: 1fr;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    &:before {
+      content: "";
+      border-style: solid;
+      border-width: 0.8em 0 0.8em 1.2em;
+      border-color: transparent transparent transparent black;
+
+      transition: transform 0.1s ease, opacity 0.1s ease;
+      opacity: 0.8;
+    }
+
+    &:hover:before {
+      transform: translateX(5px);
+      opacity: 1;
+    }
   }
 }
 </style>

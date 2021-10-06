@@ -1,5 +1,10 @@
 <template>
-  <Menu v-if="inMenu" @startGame="startGame" @backGame="backGame" />
+  <Menu
+    v-if="inMenu"
+    @startGame="startGame"
+    @backGame="backGame"
+    :mayContinue="state !== undefined"
+  />
   <Game v-if="!inMenu" :state="state" @toMenu="inMenu = true" />
 
   <footer>
@@ -35,13 +40,12 @@ import { exportState, importState } from "./GameStorage";
 
 @Options({
   data() {
-    const state =
-      localStorage.lastState && process.env.NODE_ENV === "production"
-        ? importState(localStorage.lastState)
-        : undefined;
     return {
-      inMenu: state === undefined,
-      state: state,
+      inMenu: true,
+      state:
+        localStorage.lastState && process.env.NODE_ENV === "production"
+          ? importState(localStorage.lastState)
+          : undefined,
       copyright: "",
       stateStack: [],
     };
